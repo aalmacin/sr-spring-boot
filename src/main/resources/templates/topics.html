@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<h1>Topics</h1>
+<table>
+    <tr th:each="topic : ${topics}">
+        <td th:text="${topic.id}"></td>
+        <td th:text="${topic.name}"></td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.raidrin.spacedrepetition.website.category;
+package com.raidrin.spacedrepetition.website.topic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

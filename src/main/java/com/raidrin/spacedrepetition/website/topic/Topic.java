@@ -1,4 +1,4 @@
-package com.raidrin.spacedrepetition.website.category;
+package com.raidrin.spacedrepetition.website.topic;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

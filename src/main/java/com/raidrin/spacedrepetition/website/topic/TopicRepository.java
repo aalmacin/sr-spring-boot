@@ -1,6 +1,5 @@
-package com.raidrin.spacedrepetition.website.category;
+package com.raidrin.spacedrepetition.website.topic;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

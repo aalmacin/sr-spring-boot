@@ -2,10 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
+    <title>Topics</title>
 </head>
 <body>
 <h1>Topics</h1>
-<table>
+
+<table class="table table-bordered">
     <tr th:each="topic : ${topics}">
         <td th:text="${topic.id}"></td>
         <td th:text="${topic.name}"></td>

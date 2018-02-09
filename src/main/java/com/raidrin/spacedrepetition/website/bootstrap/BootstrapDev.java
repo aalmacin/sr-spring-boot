@@ -1,9 +1,9 @@
 package com.raidrin.spacedrepetition.website.bootstrap;
 
 import com.raidrin.spacedrepetition.website.study.Rating;
-import com.raidrin.spacedrepetition.website.study.Study;
+import com.raidrin.spacedrepetition.website.study.StudyRecord;
 import com.raidrin.spacedrepetition.website.study.StudyRepository;
-import com.raidrin.spacedrepetition.website.topic.Topic;
+import com.raidrin.spacedrepetition.website.topic.TopicRecord;
 import com.raidrin.spacedrepetition.website.topic.TopicRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,17 +21,17 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
 
 
     private void initData() {
-        Topic math = new Topic("Math");
-        Topic physics = new Topic("Physics");
-        Topic english = new Topic("English");
-        Topic music = new Topic("Music");
+        TopicRecord math = new TopicRecord("Math");
+        TopicRecord physics = new TopicRecord("Physics");
+        TopicRecord english = new TopicRecord("English");
+        TopicRecord music = new TopicRecord("Music");
 
         topicRepository.save(math);
         topicRepository.save(physics);
         topicRepository.save(english);
         topicRepository.save(music);
 
-        Study session1 = new Study();
+        StudyRecord session1 = new StudyRecord();
         session1.setRating(Rating.HARD);
         session1.setTopic(math);
         studyRepository.save(session1);

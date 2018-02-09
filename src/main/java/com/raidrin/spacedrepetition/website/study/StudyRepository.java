@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.ArrayList;
 
 public interface StudyRepository extends JpaRepository<StudyRecord, Long> {
-    ArrayList<Study> findByTopic(TopicRecord topic);
+    ArrayList<StudyRecord> findByTopic(TopicRecord topic);
 }

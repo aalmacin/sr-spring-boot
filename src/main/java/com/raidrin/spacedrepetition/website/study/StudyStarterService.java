@@ -1,4 +1,4 @@
-package com.raidrin.spacedrepetition.website.topic;
+package com.raidrin.spacedrepetition.website.study;
 
 interface StudyStarterService {
     void startStudy();

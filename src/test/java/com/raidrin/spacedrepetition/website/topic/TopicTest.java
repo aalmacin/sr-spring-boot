@@ -19,8 +19,8 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @DataJpaTest
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class TopicTest {
     private Topic math;
 

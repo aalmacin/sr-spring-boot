@@ -1,6 +1,6 @@
 package com.raidrin.spacedrepetition.website.study;
 
-import com.raidrin.spacedrepetition.website.topic.TopicRecord;
+import com.raidrin.spacedrepetition.website.topic.TopicRecordImpl;
 
 import javax.persistence.*;
 
@@ -12,7 +12,7 @@ public class StudyRecord {
     private Rating rating;
 
     @OneToOne
-    private TopicRecord topic;
+    private TopicRecordImpl topic;
 
     public StudyRecord() {
     }
@@ -33,11 +33,11 @@ public class StudyRecord {
         this.rating = rating;
     }
 
-    public TopicRecord getTopic() {
+    public TopicRecordImpl getTopic() {
         return topic;
     }
 
-    public void setTopic(TopicRecord topic) {
+    public void setTopic(TopicRecordImpl topic) {
         this.topic = topic;
     }
 

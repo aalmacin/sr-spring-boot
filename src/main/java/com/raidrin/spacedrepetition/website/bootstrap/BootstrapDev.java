@@ -3,7 +3,7 @@ package com.raidrin.spacedrepetition.website.bootstrap;
 import com.raidrin.spacedrepetition.website.study.Rating;
 import com.raidrin.spacedrepetition.website.study.StudyRecord;
 import com.raidrin.spacedrepetition.website.study.StudyRepository;
-import com.raidrin.spacedrepetition.website.topic.TopicRecord;
+import com.raidrin.spacedrepetition.website.topic.TopicRecordImpl;
 import com.raidrin.spacedrepetition.website.topic.TopicRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,10 +21,10 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
 
 
     private void initData() {
-        TopicRecord math = new TopicRecord("Math");
-        TopicRecord physics = new TopicRecord("Physics");
-        TopicRecord english = new TopicRecord("English");
-        TopicRecord music = new TopicRecord("Music");
+        TopicRecordImpl math = new TopicRecordImpl("Math");
+        TopicRecordImpl physics = new TopicRecordImpl("Physics");
+        TopicRecordImpl english = new TopicRecordImpl("English");
+        TopicRecordImpl music = new TopicRecordImpl("Music");
 
         topicRepository.save(math);
         topicRepository.save(physics);

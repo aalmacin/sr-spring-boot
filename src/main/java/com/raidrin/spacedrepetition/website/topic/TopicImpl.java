@@ -18,8 +18,19 @@ public class TopicImpl implements Topic {
     }
 
     @Override
-    public void createSubTopic(String subTopic, TopicRecord topic) throws ParentTopicNotFoundException {
-        throw new ParentTopicNotFoundException();
+    public void createSubTopic(String subTopic, String topic) throws ParentTopicNotFoundException {
+        TopicRecord parentTopic = topicRepository.findByName(topic);
+        TopicRecord childTopic = new TopicRecordImpl(subTopic);
+
+        if(parentTopic == null) throw new ParentTopicNotFoundException();
+
+        ((TopicRecordImpl) childTopic).setParentTopic((TopicRecordImpl) parentTopic);
+        topicRepository.save((TopicRecordImpl) childTopic);
+    }
+
+    @Override
+    public TopicRecord findTopic(String name) {
+        return topicRepository.findByName(name);
     }
 
     @Override

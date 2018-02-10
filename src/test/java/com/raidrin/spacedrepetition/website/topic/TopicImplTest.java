@@ -37,31 +37,31 @@ public class TopicImplTest {
     }
 
     @Test
+    public void findTopic() {
+        topic.createTopic("Math");
+        TopicRecord math = topic.findTopic("Math");
+        assertThat(math, notNullValue());
+        assertThat(math.getName(), is(equalTo("Math")));
+
+        topic.createTopic("English");
+        TopicRecord english = topic.findTopic("English");
+        assertThat(english, notNullValue());
+        assertThat(english.getName(), is(equalTo("English")));
+    }
+
+    @Test
     public void createSubTopicWithInvalidParent() throws Exception {
         expectedException.expect(ParentTopicNotFoundException.class);
-        topic.createSubTopic("a", new TopicRecord() {
-            @Override
-            public Long getId() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public TopicRecordImpl getParentTopic() {
-                return null;
-            }
-        });
-
+        topic.createSubTopic("a", "Polly");
     }
 
     @Test
     public void createSubTopicWithValidParent() throws Exception {
-        topicRepository.save(new TopicRecordImpl("Math"));
-//        this.topic.createSubTopic("Calculus", );
+        topic.createTopic("Math");
+        TopicRecord math = topic.findTopic("Math");
+        topic.createSubTopic("Calculus", math.getName());
+
+        assertThat(topicRepository.findAll().size(), is(equalTo(2)));
     }
 
 }

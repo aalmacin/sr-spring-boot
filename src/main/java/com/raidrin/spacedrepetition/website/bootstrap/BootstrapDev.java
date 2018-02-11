@@ -1,7 +1,7 @@
 package com.raidrin.spacedrepetition.website.bootstrap;
 
 import com.raidrin.spacedrepetition.website.study.Rating;
-import com.raidrin.spacedrepetition.website.study.StudyRecord;
+import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
 import com.raidrin.spacedrepetition.website.study.StudyRepository;
 import com.raidrin.spacedrepetition.website.topic.TopicRecordImpl;
 import com.raidrin.spacedrepetition.website.topic.TopicRepository;
@@ -31,7 +31,7 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
         topicRepository.save(english);
         topicRepository.save(music);
 
-        StudyRecord session1 = new StudyRecord();
+        StudyRecordImpl session1 = new StudyRecordImpl();
         session1.setRating(Rating.HARD);
         session1.setTopic(math);
         studyRepository.save(session1);

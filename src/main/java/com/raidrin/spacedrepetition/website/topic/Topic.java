@@ -1,8 +1,7 @@
 package com.raidrin.spacedrepetition.website.topic;
 
 import com.raidrin.spacedrepetition.website.DateTime;
-import com.raidrin.spacedrepetition.website.study.Study;
-import org.springframework.stereotype.Component;
+import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
 
 import java.util.ArrayList;
 
@@ -11,7 +10,7 @@ public interface Topic {
     void createSubTopic(String subTopic, String topic) throws ParentTopicNotFoundException;
     TopicRecord findTopic(String name);
 
-    ArrayList<Topic> getSubTopics(TopicRecord topic);
-    ArrayList<DateTime> getSchedule(TopicRecord topic);
-    ArrayList<Study> getStudies(TopicRecord topic);
+    ArrayList<TopicRecord> getSubTopics(String topic) throws TopicNotFoundException;
+    ArrayList<DateTime> getSchedule(String topic);
+    ArrayList<StudyRecordImpl> getStudies(String topic) throws TopicNotFoundException;
 }

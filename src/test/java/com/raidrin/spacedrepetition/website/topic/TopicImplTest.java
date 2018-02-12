@@ -1,9 +1,7 @@
 package com.raidrin.spacedrepetition.website.topic;
 
 import com.raidrin.spacedrepetition.website.WebsiteApplication;
-import com.raidrin.spacedrepetition.website.study.Study;
-import com.raidrin.spacedrepetition.website.study.StudyConfiguration;
-import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
+import com.raidrin.spacedrepetition.website.study.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,7 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.hamcrest.CoreMatchers.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -29,6 +29,9 @@ public class TopicImplTest {
 
     @Autowired
     private TopicRepository topicRepository;
+
+    @Autowired
+    private StudyRepository studyRepository;
 
     @Autowired
     private Topic topic;
@@ -129,7 +132,36 @@ public class TopicImplTest {
 
     @Test
     public void getSchedule() {
-        // TODO - implement after Study
+        String mathTopicName = "Math";
+        topic.createTopic(mathTopicName);
+        TopicRecord math = topicRepository.findByName(mathTopicName);
+
+        ArrayList<Timestamp> schedule = topic.getSchedule(math);
+        assertThat(schedule, notNullValue());
+        assertThat(schedule.size(), equalTo(0));
+
+        Rating[] ratings = {Rating.HARD, Rating.HARD, Rating.MEDIUM, Rating.EASY};
+        for (int i=0; i < ratings.length; i++) {
+            study.startStudy(math);
+        }
+
+        List<StudyRecordImpl> studyRecordList = studyRepository.findAll();
+        ArrayList<Timestamp> endTimes = new ArrayList<>();
+
+        for (int i=0; i < studyRecordList.size(); i++) {
+            StudyRecordImpl studyRecord = studyRecordList.get(i);
+            endTimes.add(studyRecord.getEndTime());
+            study.finishStudy(studyRecord, ratings[i], "No comment");
+        }
+
+        schedule = topic.getSchedule(math);
+        assertThat(schedule, notNullValue());
+        assertThat(schedule.size(), equalTo(5));
+
+        // TODO
+        // 1. Sort the end times and get the latest one.
+        // 2. Calculate the current rating base on the previous ratings set
+        // 3. Create a schedule based on the ratings
     }
 
     @Test

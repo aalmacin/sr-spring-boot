@@ -4,6 +4,6 @@ import com.raidrin.spacedrepetition.website.topic.TopicRecord;
 
 public interface Study {
     void startStudy(TopicRecord topic);
-    void finishStudy(Rating rating, String comment);
+    void finishStudy(StudyRecord studyRecord, Rating rating, String comment);
 
 }

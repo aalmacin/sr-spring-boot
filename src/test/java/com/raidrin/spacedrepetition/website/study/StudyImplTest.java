@@ -14,8 +14,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,26 +42,6 @@ public class StudyImplTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void getStartTime() throws Exception {
-    }
-
-    @Test
-    public void getEndTime() throws Exception {
-    }
-
-    @Test
-    public void getRating() throws Exception {
-    }
-
-    @Test
-    public void getComment() throws Exception {
-    }
-
-    @Test
-    public void getTopic() throws Exception {
-    }
-
-    @Test
     public void startStudy() throws Exception {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
@@ -65,7 +49,21 @@ public class StudyImplTest {
 
         study.startStudy(math);
         TopicRecord topicRecord = topic.findTopic(mathTopicName);
-        assertThat(studyRepository.findByTopic(topicRecord).size(), is(equalTo(1)));
+        ArrayList<StudyRecordImpl> studyRecord = studyRepository.findByTopic(topicRecord);
+
+        assertThat(studyRecord.size(), is(equalTo(1)));
+
+        study.startStudy(math);
+        topicRecord = topic.findTopic(mathTopicName);
+        studyRecord = studyRepository.findByTopic(topicRecord);
+
+        Iterator<StudyRecordImpl> studyRecordIterator = studyRecord.iterator();
+        while (studyRecordIterator.hasNext()) {
+            StudyRecord tempStudyRecord = studyRecordIterator.next();
+            assertThat(tempStudyRecord.getStartTime(), notNullValue());
+        }
+
+        assertThat(studyRecord.size(), is(equalTo(2)));
     }
 
     @Test

@@ -2,23 +2,32 @@ package com.raidrin.spacedrepetition.website.study;
 
 import com.raidrin.spacedrepetition.website.topic.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 public class StudyImpl implements Study {
     private StudyRepository studyRepository;
-    private TopicRepository topicRepository;
 
-    public StudyImpl(StudyRepository studyRepository, TopicRepository topicRepository) {
+    public StudyImpl(StudyRepository studyRepository) {
         this.studyRepository = studyRepository;
-        this.topicRepository = topicRepository;
     }
 
     @Override
     public void startStudy(TopicRecord topic) {
         StudyRecord studyRecord = new StudyRecordImpl((TopicRecordImpl) topic);
+
+        ((StudyRecordImpl) studyRecord).setStartTime(generateCurrentTimestamp());
         studyRepository.save((StudyRecordImpl) studyRecord);
     }
 
     @Override
-    public void finishStudy(Rating rating, String comment) {
+    public void finishStudy(StudyRecord studyRecord, Rating rating, String comment) {
+        ((StudyRecordImpl) studyRecord).setEndTime(generateCurrentTimestamp());
+        studyRepository.save((StudyRecordImpl) studyRecord);
+    }
 
+    private Timestamp generateCurrentTimestamp() {
+        Instant instant = Instant.now();
+        return new Timestamp(instant.getEpochSecond());
     }
 }

@@ -35,6 +35,21 @@ public class StudyRecordImpl implements StudyRecord {
         return rating;
     }
 
+    @Override
+    public String getStartTime() {
+        return null;
+    }
+
+    @Override
+    public String getEndTime() {
+        return null;
+    }
+
+    @Override
+    public String getComment() {
+        return null;
+    }
+
     public void setRating(Rating rating) {
         this.rating = rating;
     }

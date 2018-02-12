@@ -3,9 +3,8 @@ package com.raidrin.spacedrepetition.website.study;
 import com.raidrin.spacedrepetition.website.WebsiteApplication;
 import com.raidrin.spacedrepetition.website.topic.Topic;
 import com.raidrin.spacedrepetition.website.topic.TopicConfiguration;
-import com.raidrin.spacedrepetition.website.topic.TopicNotFoundException;
 import com.raidrin.spacedrepetition.website.topic.TopicRecord;
-import org.junit.Before;
+import com.raidrin.spacedrepetition.website.topic.TopicRepository;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,6 +31,9 @@ public class StudyImplTest {
     @Autowired
     private StudyRepository studyRepository;
 
+    @Autowired
+    private TopicRepository topicRepository;
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -56,16 +58,13 @@ public class StudyImplTest {
     }
 
     @Test
-    public void invalidTopicOnStartStudy() throws Exception {
-        expectedException.expect(TopicNotFoundException.class);
-        study.startStudy("Math");
-    }
-
-    @Test
     public void startStudy() throws Exception {
-        topic.createTopic("Math");
-        study.startStudy("Math");
-        TopicRecord topicRecord = topic.findTopic("Math");
+        String mathTopicName = "Math";
+        topic.createTopic(mathTopicName);
+        TopicRecord math = topicRepository.findByName(mathTopicName);
+
+        study.startStudy(math);
+        TopicRecord topicRecord = topic.findTopic(mathTopicName);
         assertThat(studyRepository.findByTopic(topicRecord).size(), is(equalTo(1)));
     }
 

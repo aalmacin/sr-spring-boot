@@ -1,6 +1,5 @@
 package com.raidrin.spacedrepetition.website.study;
 
-import com.raidrin.spacedrepetition.website.DateTime;
 import com.raidrin.spacedrepetition.website.topic.*;
 
 public class StudyImpl implements Study {
@@ -13,35 +12,8 @@ public class StudyImpl implements Study {
     }
 
     @Override
-    public DateTime getStartTime() {
-        return null;
-    }
-
-    @Override
-    public DateTime getEndTime() {
-        return null;
-    }
-
-    @Override
-    public Rating getRating() {
-        return null;
-    }
-
-    @Override
-    public String getComment() {
-        return null;
-    }
-
-    @Override
-    public Topic getTopic() {
-        return null;
-    }
-
-    @Override
-    public void startStudy(String topic) throws TopicNotFoundException {
-        TopicRecord topicRecord = topicRepository.findByName(topic);
-        if(topicRecord == null) throw new TopicNotFoundException();
-        StudyRecord studyRecord = new StudyRecordImpl((TopicRecordImpl) topicRecord);
+    public void startStudy(TopicRecord topic) {
+        StudyRecord studyRecord = new StudyRecordImpl((TopicRecordImpl) topic);
         studyRepository.save((StudyRecordImpl) studyRecord);
     }
 

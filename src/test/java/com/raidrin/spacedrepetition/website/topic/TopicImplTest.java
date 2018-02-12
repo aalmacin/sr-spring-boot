@@ -57,75 +57,70 @@ public class TopicImplTest {
     }
 
     @Test
-    public void createSubTopicWithInvalidParent() throws Exception {
-        expectedException.expect(ParentTopicNotFoundException.class);
-        topic.createSubTopic("a", "Polly");
-    }
-
-    @Test
     public void createSubTopicWithValidParent() throws Exception {
         topic.createTopic("Math");
         TopicRecord math = topic.findTopic("Math");
-        topic.createSubTopic("Calculus", math.getName());
+        topic.createSubTopic("Calculus", math);
 
         assertThat(topicRepository.findAll().size(), is(equalTo(2)));
     }
 
     @Test
-    public void invalidTopicPassedOnGetSubTopics() throws ParentTopicNotFoundException, TopicNotFoundException {
-        expectedException.expect(TopicNotFoundException.class);
-        topic.getSubTopics("Yeah");
-    }
+    public void getSubTopics() {
+        String mathTopicName = "Math";
+        String englishTopicName = "English";
 
-    @Test
-    public void getSubTopics() throws ParentTopicNotFoundException, TopicNotFoundException {
         // Create topics
-        topic.createTopic("Math");
-        topic.createTopic("English");
+        topic.createTopic(mathTopicName);
+        topic.createTopic(englishTopicName);
+
+        TopicRecord math = topicRepository.findByName(mathTopicName);
+        TopicRecord english = topicRepository.findByName(englishTopicName);
 
         // Empty subtopics
-        ArrayList<TopicRecord> mathSubTopics = topic.getSubTopics("Math");
+        ArrayList<TopicRecord> mathSubTopics = topic.getSubTopics(math);
         assertThat(mathSubTopics.size(), is(equalTo(0)));
 
-        ArrayList<TopicRecord> englishSubTopics = topic.getSubTopics("English");
+        ArrayList<TopicRecord> englishSubTopics = topic.getSubTopics(english);
         assertThat(englishSubTopics.size(), is(equalTo(0)));
 
         // Create Subtopic
-        topic.createSubTopic("Calculus", "Math");
+        topic.createSubTopic("Calculus", math);
 
-        mathSubTopics = topic.getSubTopics("Math");
+        mathSubTopics = topic.getSubTopics(math);
         assertThat(mathSubTopics.size(), is(equalTo(1)));
 
-        englishSubTopics = topic.getSubTopics("English");
+        englishSubTopics = topic.getSubTopics(english);
         assertThat(englishSubTopics.size(), is(equalTo(0)));
 
         // Another Subtopic
-        topic.createSubTopic("Algebra", "Math");
+        topic.createSubTopic("Algebra", math);
 
-        mathSubTopics = topic.getSubTopics("Math");
+        mathSubTopics = topic.getSubTopics(math);
         assertThat(mathSubTopics.size(), is(equalTo(2)));
 
         // Another Subtopic
-        topic.createSubTopic("Grammar", "English");
+        topic.createSubTopic("Grammar", english);
 
-        englishSubTopics = topic.getSubTopics("English");
+        englishSubTopics = topic.getSubTopics(english);
         assertThat(englishSubTopics.size(), is(equalTo(1)));
 
         // Math Child Subtopic
-        topic.createSubTopic("Linear Algebra", "Algebra");
+        TopicRecord algebra = topicRepository.findByName("Algebra");
+        topic.createSubTopic("Linear Algebra", algebra);
 
-        mathSubTopics = topic.getSubTopics("Math");
-        ArrayList<TopicRecord> algebraSubTopics = topic.getSubTopics("Algebra");
+        mathSubTopics = topic.getSubTopics(math);
+        ArrayList<TopicRecord> algebraSubTopics = topic.getSubTopics(algebra);
 
         assertThat(algebraSubTopics.size(), is(equalTo(1)));
         assertThat(mathSubTopics.size(), is(equalTo(2)));
 
         // Another Math Child Subtopic
-        topic.createSubTopic("Polynomials", "Algebra");
+        topic.createSubTopic("Polynomials", algebra);
 
-        mathSubTopics = topic.getSubTopics("Math");
-        englishSubTopics = topic.getSubTopics("English");
-        algebraSubTopics = topic.getSubTopics("Algebra");
+        mathSubTopics = topic.getSubTopics(math);
+        englishSubTopics = topic.getSubTopics(english);
+        algebraSubTopics = topic.getSubTopics(algebra);
 
         assertThat(algebraSubTopics.size(), is(equalTo(2)));
         assertThat(mathSubTopics.size(), is(equalTo(2)));
@@ -138,20 +133,17 @@ public class TopicImplTest {
     }
 
     @Test
-    public void invalidTopicPassedOnGetStudies() throws TopicNotFoundException {
-        expectedException.expect(TopicNotFoundException.class);
-        topic.getStudies("Math");
-    }
+    public void getStudies() {
+        String mathTopicName = "Math";
+        topic.createTopic(mathTopicName);
+        TopicRecord math = topicRepository.findByName(mathTopicName);
 
-    @Test
-    public void getStudies() throws TopicNotFoundException {
-        topic.createTopic("Math");
-        ArrayList<StudyRecordImpl> studies = topic.getStudies("Math");
+        ArrayList<StudyRecordImpl> studies = topic.getStudies(math);
         assertThat(studies.size(), is(equalTo(0)));
 
-        study.startStudy("Math");
+        study.startStudy(math);
 
-        studies = topic.getStudies("Math");
+        studies = topic.getStudies(math);
         assertThat(studies.size(), is(equalTo(1)));
     }
 }

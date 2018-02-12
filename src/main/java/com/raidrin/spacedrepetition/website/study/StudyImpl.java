@@ -22,7 +22,9 @@ public class StudyImpl implements Study {
 
     @Override
     public void finishStudy(StudyRecord studyRecord, Rating rating, String comment) {
+        ((StudyRecordImpl) studyRecord).setComment(comment);
         ((StudyRecordImpl) studyRecord).setEndTime(generateCurrentTimestamp());
+        ((StudyRecordImpl) studyRecord).setRating(rating);
         studyRepository.save((StudyRecordImpl) studyRecord);
     }
 

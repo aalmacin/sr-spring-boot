@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -68,6 +69,23 @@ public class StudyImplTest {
 
     @Test
     public void finishStudy() throws Exception {
+        String mathTopicName = "Math";
+        topic.createTopic(mathTopicName);
+        TopicRecord math = topicRepository.findByName(mathTopicName);
+
+        study.startStudy(math);
+        List<StudyRecordImpl> allStudies = studyRepository.findAll();
+        assertThat(allStudies.size(), is(equalTo(1)));
+
+        StudyRecord studyRecord = studyRepository.findById(allStudies.get(0).getId()).get();
+        study.finishStudy(studyRecord, Rating.MEDIUM, "Not so difficult.");
+
+        studyRecord = studyRepository.findById(allStudies.get(0).getId()).get();
+        assertThat(studyRecord.getStartTime(), notNullValue());
+        assertThat(studyRecord.getComment(), notNullValue());
+        assertThat(studyRecord.getEndTime(), notNullValue());
+        assertThat(studyRecord.getRating(), notNullValue());
+        assertThat(studyRecord.getTopic(), notNullValue());
     }
 
 }

@@ -41,7 +41,7 @@ public class StudyRecordImpl implements StudyRecord {
 
     @Override
     public String getComment() {
-        return null;
+        return comment;
     }
 
     public void setRating(Rating rating) {

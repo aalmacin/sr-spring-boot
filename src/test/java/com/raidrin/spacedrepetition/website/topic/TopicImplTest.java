@@ -1,9 +1,7 @@
 package com.raidrin.spacedrepetition.website.topic;
 
 import com.raidrin.spacedrepetition.website.WebsiteApplication;
-import com.raidrin.spacedrepetition.website.study.Study;
-import com.raidrin.spacedrepetition.website.study.StudyConfiguration;
-import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
+import com.raidrin.spacedrepetition.website.study.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,8 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.hamcrest.CoreMatchers.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
@@ -24,11 +22,15 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {StudyConfiguration.class, TopicConfiguration.class, WebsiteApplication.class})
 @DataJpaTest
 public class TopicImplTest {
+    private static final int SET_COUNT = 5;
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Autowired
     private TopicRepository topicRepository;
+
+    @Autowired
+    private StudyRepository studyRepository;
 
     @Autowired
     private Topic topic;
@@ -129,7 +131,90 @@ public class TopicImplTest {
 
     @Test
     public void getSchedule() {
-        // TODO - implement after Study
+        String mathTopicName = "Math";
+        topic.createTopic(mathTopicName);
+        TopicRecord math = topicRepository.findByName(mathTopicName);
+
+        ArrayList<Timestamp> schedule = topic.getSchedule(math);
+        assertThat(schedule, notNullValue());
+        assertThat(schedule.size(), equalTo(0));
+
+        Rating[] ratings = {Rating.HARD, Rating.HARD, Rating.MEDIUM, Rating.EASY};
+        for (int i=0; i < ratings.length; i++) {
+            study.startStudy(math);
+        }
+
+        List<StudyRecordImpl> studyRecordList = studyRepository.findAll();
+        ArrayList<Timestamp> endTimes = new ArrayList<>();
+
+        for (int i=0; i < studyRecordList.size(); i++) {
+            StudyRecordImpl studyRecord = studyRecordList.get(i);
+            endTimes.add(studyRecord.getEndTime());
+            study.finishStudy(studyRecord, ratings[i], "No comment");
+        }
+
+        schedule = topic.getSchedule(math);
+        assertThat(schedule, notNullValue());
+        assertThat(schedule.size(), equalTo(5));
+
+        // TODO
+        // 1. Sort the end times and get the latest one.
+        // 2. Calculate the current rating base on the previous ratings set
+        // 3. Create a schedule based on the ratings
+    }
+
+    @Test
+    public void ratingFormula() {
+        ArrayList<Rating> ratings = new ArrayList<>();
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_EASY);
+        for (int i=0; i < 5; i++) ratings.add(Rating.EASY);
+        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
+        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
+        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
+        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
+        for (int i=0; i < 5; i++) ratings.add(Rating.HARD);
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
+        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
+
+
+        int ratingsCount = (int) Math.ceil((float) ratings.size() / SET_COUNT);
+        ArrayList<ArrayList<Rating>> splitRatings = new ArrayList<>();
+
+        for (int i = 0; i < ratingsCount; i++) {
+            ArrayList<Rating> ratingList = new ArrayList<>();
+            for (int j = 0; j < SET_COUNT ; j++) ratingList.add(ratings.get((i * SET_COUNT) + j));
+            splitRatings.add(ratingList);
+        }
+
+        double firstTotal = splitRatings
+                .remove(0)
+                .stream()
+                .mapToDouble(Rating::getValue)
+                .sum() / SET_COUNT;
+
+        ArrayList<Double> totalAvgs = new ArrayList<>();
+        Iterator<ArrayList<Rating>> splitRatingsIterator = splitRatings.iterator();
+        while (splitRatingsIterator.hasNext()) {
+            ArrayList<Rating> ratingBuffer = splitRatingsIterator.next();
+            double totalAvg = ratingBuffer.stream().mapToDouble(Rating::getValue).sum() / SET_COUNT;
+            totalAvgs.add(
+                    totalAvg
+            );
+        }
+
+        double otherTotals = totalAvgs.stream().mapToDouble(Double::doubleValue).sum() / totalAvgs.size();
+
+        double regular = Math.round((firstTotal + otherTotals) / 2);
+        double weighted = Math.round( ((firstTotal * 70) + (otherTotals * 30)) / (100));
+
+        System.out.println(regular);
+        System.out.println(weighted);
+        assertThat(weighted, is(not(equalTo(regular))));
     }
 
     @Test

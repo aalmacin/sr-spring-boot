@@ -2,6 +2,7 @@ package com.raidrin.spacedrepetition.website.topic;
 
 import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public interface Topic {
@@ -10,6 +11,6 @@ public interface Topic {
     TopicRecord findTopic(String name);
 
     ArrayList<TopicRecord> getSubTopics(TopicRecord topic);
-    ArrayList<String> getSchedule(TopicRecord topic);
+    ArrayList<Timestamp> getSchedule(TopicRecord topic);
     ArrayList<StudyRecordImpl> getStudies(TopicRecord topic);
 }

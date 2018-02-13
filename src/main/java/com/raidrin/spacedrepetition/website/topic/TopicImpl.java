@@ -3,6 +3,7 @@ package com.raidrin.spacedrepetition.website.topic;
 import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
 import com.raidrin.spacedrepetition.website.study.StudyRepository;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class TopicImpl implements Topic {
@@ -37,8 +38,8 @@ public class TopicImpl implements Topic {
     }
 
     @Override
-    public ArrayList<String> getSchedule(TopicRecord topic) {
-        return null;
+    public ArrayList<Timestamp> getSchedule(TopicRecord topic) {
+        return new ArrayList<>();
     }
 
     @Override

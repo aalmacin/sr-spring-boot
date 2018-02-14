@@ -19,10 +19,9 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {StudyConfiguration.class, TopicConfiguration.class, WebsiteApplication.class})
+@ContextConfiguration(classes = {StudyConfiguration.class, TopicConfiguration.class, RatingCalculatorConfiguration.class, WebsiteApplication.class})
 @DataJpaTest
 public class TopicImplTest {
-    private static final int SET_COUNT = 5;
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -161,60 +160,6 @@ public class TopicImplTest {
         // 1. Sort the end times and get the latest one.
         // 2. Calculate the current rating base on the previous ratings set
         // 3. Create a schedule based on the ratings
-    }
-
-    @Test
-    public void ratingFormula() {
-        ArrayList<Rating> ratings = new ArrayList<>();
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_EASY);
-        for (int i=0; i < 5; i++) ratings.add(Rating.EASY);
-        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings.add(Rating.HARD);
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings.add(Rating.VERY_HARD);
-
-
-        int ratingsCount = (int) Math.ceil((float) ratings.size() / SET_COUNT);
-        ArrayList<ArrayList<Rating>> splitRatings = new ArrayList<>();
-
-        for (int i = 0; i < ratingsCount; i++) {
-            ArrayList<Rating> ratingList = new ArrayList<>();
-            for (int j = 0; j < SET_COUNT ; j++) ratingList.add(ratings.get((i * SET_COUNT) + j));
-            splitRatings.add(ratingList);
-        }
-
-        double firstTotal = splitRatings
-                .remove(0)
-                .stream()
-                .mapToDouble(Rating::getValue)
-                .sum() / SET_COUNT;
-
-        ArrayList<Double> totalAvgs = new ArrayList<>();
-        Iterator<ArrayList<Rating>> splitRatingsIterator = splitRatings.iterator();
-        while (splitRatingsIterator.hasNext()) {
-            ArrayList<Rating> ratingBuffer = splitRatingsIterator.next();
-            double totalAvg = ratingBuffer.stream().mapToDouble(Rating::getValue).sum() / SET_COUNT;
-            totalAvgs.add(
-                    totalAvg
-            );
-        }
-
-        double otherTotals = totalAvgs.stream().mapToDouble(Double::doubleValue).sum() / totalAvgs.size();
-
-        double regular = Math.round((firstTotal + otherTotals) / 2);
-        double weighted = Math.round( ((firstTotal * 70) + (otherTotals * 30)) / (100));
-
-        System.out.println(regular);
-        System.out.println(weighted);
-        assertThat(weighted, is(not(equalTo(regular))));
     }
 
     @Test

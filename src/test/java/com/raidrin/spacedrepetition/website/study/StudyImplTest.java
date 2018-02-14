@@ -24,7 +24,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {StudyConfiguration.class, TopicConfiguration.class, WebsiteApplication.class})
+@ContextConfiguration(classes = {StudyConfiguration.class, TopicConfiguration.class, RatingCalculatorConfiguration.class, WebsiteApplication.class})
 @DataJpaTest
 public class StudyImplTest {
     @Autowired

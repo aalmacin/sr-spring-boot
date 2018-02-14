@@ -136,7 +136,8 @@ public class TopicImplTest {
 
         ArrayList<Timestamp> schedule = topic.getSchedule(math);
         assertThat(schedule, notNullValue());
-        assertThat(schedule.size(), equalTo(0));
+        assertThat(schedule.size(), equalTo(5));
+        // 1
 
         Rating[] ratings = {Rating.HARD, Rating.HARD, Rating.MEDIUM, Rating.EASY};
         for (int i=0; i < ratings.length; i++) {
@@ -155,6 +156,8 @@ public class TopicImplTest {
         schedule = topic.getSchedule(math);
         assertThat(schedule, notNullValue());
         assertThat(schedule.size(), equalTo(5));
+
+        // 2
 
         // TODO
         // 1. Sort the end times and get the latest one.

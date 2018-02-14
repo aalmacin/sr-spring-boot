@@ -39,10 +39,14 @@ public class RatingCalculatorImpl implements RatingCalculator {
     }
 
     private double getFirstTotal(ArrayList<ArrayList<Rating>> splitRatings) {
-        final ArrayList<Rating> firstSet = splitRatings.remove(0);
-        return firstSet.stream()
-                .mapToDouble(Rating::getValue)
-                .sum() / firstSet.size();
+        if(splitRatings.size() > 0) {
+            final ArrayList<Rating> firstSet = splitRatings.remove(0);
+            return firstSet.stream()
+                    .mapToDouble(Rating::getValue)
+                    .sum() / firstSet.size();
+        } else {
+            return 1;
+        }
     }
 
     private ArrayList<Double> getTotalAvgs(ArrayList<ArrayList<Rating>> splitRatings) {

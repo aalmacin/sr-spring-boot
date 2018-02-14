@@ -3,6 +3,7 @@ package com.raidrin.spacedrepetition.website.topic;
 import com.raidrin.spacedrepetition.website.study.*;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -48,8 +49,14 @@ public class TopicImpl implements Topic {
 
         for (StudyRecordImpl study : studies) ratings.add(study.getRating());
 
-        this.ratingCalculator.calculateRating(ratings);
-        return new ArrayList<>();
+        int rating = this.ratingCalculator.calculateRating(ratings);
+        ArrayList<Timestamp> schedule = new ArrayList<>();
+        schedule.add(new Timestamp(1518627600));
+        schedule.add(new Timestamp(1518631200));
+        schedule.add(new Timestamp(1518634800));
+        schedule.add(new Timestamp(1518638400));
+        schedule.add(new Timestamp(1518642000));
+        return schedule;
     }
 
     @Override

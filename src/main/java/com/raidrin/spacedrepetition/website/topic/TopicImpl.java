@@ -3,12 +3,7 @@ package com.raidrin.spacedrepetition.website.topic;
 import com.raidrin.spacedrepetition.website.study.*;
 import org.joda.time.DateTime;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.stream.Stream;
 
 public class TopicImpl implements Topic {
     private TopicRepository topicRepository;
@@ -44,7 +39,7 @@ public class TopicImpl implements Topic {
     }
 
     @Override
-    public Timestamp getNextStudyTime(TopicRecord topic) throws InvalidRatingException {
+    public long getNextStudyTime(TopicRecord topic) throws InvalidRatingException {
         ArrayList<StudyRecordImpl> studies = studyRepository.findByTopic(topic);
         ArrayList<Rating> ratings = new ArrayList<>();
 
@@ -52,24 +47,23 @@ public class TopicImpl implements Topic {
 
         int calculatedRating = this.ratingCalculator.calculateRating(ratings);
         DateTime dateTime = new DateTime();
-        long lastStudyTime = dateTime.getMillis();
-        Timestamp nextStudyTime;
+        long nextStudyTime;
 
         switch (calculatedRating) {
             case 1:
-                nextStudyTime = new Timestamp(dateTime.getMillis());
+                nextStudyTime = dateTime.getMillis();
                 break;
             case 2:
-                nextStudyTime = new Timestamp(dateTime.plusMinutes(25).getMillis());
+                nextStudyTime = dateTime.plusMinutes(25).getMillis();
                 break;
             case 3:
-                nextStudyTime = new Timestamp(dateTime.plusDays(1).getMillis());
+                nextStudyTime = dateTime.plusDays(1).getMillis();
                 break;
             case 4:
-                nextStudyTime = new Timestamp(dateTime.plusDays(16).getMillis());
+                nextStudyTime = dateTime.plusDays(16).getMillis();
                 break;
             case 5:
-                nextStudyTime = new Timestamp(dateTime.plusMonths(2).getMillis());
+                nextStudyTime = dateTime.plusMonths(2).getMillis();
                 break;
             default:
                 throw new InvalidRatingException();

@@ -15,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -58,9 +57,7 @@ public class StudyImplTest {
         topicRecord = topic.findTopic(mathTopicName);
         studyRecord = studyRepository.findByTopic(topicRecord);
 
-        Iterator<StudyRecordImpl> studyRecordIterator = studyRecord.iterator();
-        while (studyRecordIterator.hasNext()) {
-            StudyRecord tempStudyRecord = studyRecordIterator.next();
+        for (StudyRecordImpl tempStudyRecord : studyRecord) {
             assertThat(tempStudyRecord.getStartTime(), notNullValue());
         }
 
@@ -77,15 +74,20 @@ public class StudyImplTest {
         List<StudyRecordImpl> allStudies = studyRepository.findAll();
         assertThat(allStudies.size(), is(equalTo(1)));
 
-        StudyRecord studyRecord = studyRepository.findById(allStudies.get(0).getId()).get();
-        study.finishStudy(studyRecord, Rating.MEDIUM, "Not so difficult.");
+        if(studyRepository.findById(allStudies.get(0).getId()).isPresent()) {
+            StudyRecord studyRecord = studyRepository.findById(allStudies.get(0).getId()).get();
+            study.finishStudy(studyRecord, Rating.MEDIUM, "Not so difficult.");
 
-        studyRecord = studyRepository.findById(allStudies.get(0).getId()).get();
-        assertThat(studyRecord.getStartTime(), notNullValue());
-        assertThat(studyRecord.getComment(), notNullValue());
-        assertThat(studyRecord.getEndTime(), notNullValue());
-        assertThat(studyRecord.getRating(), notNullValue());
-        assertThat(studyRecord.getTopic(), notNullValue());
+            if(studyRepository.findById(allStudies.get(0).getId()).isPresent()) {
+                studyRecord = studyRepository.findById(allStudies.get(0).getId()).get();
+            }
+            assertThat(studyRecord.getStartTime(), notNullValue());
+            assertThat(studyRecord.getComment(), notNullValue());
+            assertThat(studyRecord.getEndTime(), notNullValue());
+            assertThat(studyRecord.getRating(), notNullValue());
+            assertThat(studyRecord.getTopic(), notNullValue());
+        }
+
     }
 
 }

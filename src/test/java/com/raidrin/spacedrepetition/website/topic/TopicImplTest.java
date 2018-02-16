@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.hamcrest.CoreMatchers.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -130,7 +129,7 @@ public class TopicImplTest {
     }
 
     @Test
-    public void getSchedule() throws InvalidRatingException {
+    public void getNextStudyTime() throws InvalidRatingException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
         TopicRecord math = topicRepository.findByName(mathTopicName);
@@ -147,15 +146,15 @@ public class TopicImplTest {
         }
 
         List<StudyRecordImpl> studyRecordList = studyRepository.findAll();
-        ArrayList<Timestamp> endTimes = new ArrayList<>();
+        long endTime = DateTime.now().getMillis();
 
         for (int i=0; i < studyRecordList.size(); i++) {
             StudyRecordImpl studyRecord = studyRecordList.get(i);
             study.finishStudy(studyRecord, ratings.get(i), "No comment");
-            endTimes.add(studyRecord.getEndTime());
+            endTime = studyRecord.getEndTime();
         }
 
-        Timestamp nextStudyTime = topic.getNextStudyTime(math);
+        long nextStudyTime = topic.getNextStudyTime(math);
         assertThat(nextStudyTime, notNullValue());
 
         ArrayList<StudyRecordImpl> mathStudies = topic.getStudies(math);
@@ -167,35 +166,33 @@ public class TopicImplTest {
         RatingCalculatorImpl ratingCalculator = new RatingCalculatorImpl();
         int calculatedRating = ratingCalculator.calculateRating(ratings);
 
-        Timestamp lastStudy = endTimes.get(endTimes.size() - 1);
+        long lastStudy = endTime;
         DateTime dateTime = new DateTime();
-        dateTime.withMillis(lastStudy.getTime());
+        dateTime.withMillis(lastStudy);
 
         long lastStudyTime = dateTime.getMillis();
 
         switch (calculatedRating) {
             case 1:
-                assertThat(nextStudyTime.getTime(), equalTo(lastStudyTime));
+                assertThat(nextStudyTime, equalTo(lastStudyTime));
                 break;
             case 2:
                 nextStudyTime = dateTime.plusMinutes(25).getMillis();
-                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                assertThat(nextStudyTime, equalTo(nextStudyTime));
                 break;
             case 3:
                 nextStudyTime = dateTime.plusDays(1).getMillis();
-                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                assertThat(nextStudyTime, equalTo(nextStudyTime));
                 break;
             case 4:
                 nextStudyTime = dateTime.plusDays(16).getMillis();
-                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                assertThat(nextStudyTime, equalTo(nextStudyTime));
                 break;
             case 5:
                 nextStudyTime = dateTime.plusMonths(2).getMillis();
-                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                assertThat(nextStudyTime, equalTo(nextStudyTime));
                 break;
         }
-
-        // 2
 
         // TODO
         // 1. Sort the end times and get the latest one.

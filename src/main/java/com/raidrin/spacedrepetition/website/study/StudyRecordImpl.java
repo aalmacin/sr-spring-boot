@@ -3,7 +3,6 @@ package com.raidrin.spacedrepetition.website.study;
 import com.raidrin.spacedrepetition.website.topic.TopicRecordImpl;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 public class StudyRecordImpl implements StudyRecord {
@@ -11,8 +10,8 @@ public class StudyRecordImpl implements StudyRecord {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Rating rating;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private long startTime;
+    private long endTime;
     private String comment;
 
     @OneToOne
@@ -62,20 +61,20 @@ public class StudyRecordImpl implements StudyRecord {
     }
 
     @Override
-    public Timestamp getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Timestamp startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
     @Override
-    public Timestamp getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Timestamp endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 

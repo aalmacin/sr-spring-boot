@@ -1,14 +1,12 @@
 package com.raidrin.spacedrepetition.website.study;
 
 import com.raidrin.spacedrepetition.website.topic.*;
-
-import java.sql.Timestamp;
-import java.time.Instant;
+import org.joda.time.DateTime;
 
 public class StudyImpl implements Study {
     private StudyRepository studyRepository;
 
-    public StudyImpl(StudyRepository studyRepository) {
+    StudyImpl(StudyRepository studyRepository) {
         this.studyRepository = studyRepository;
     }
 
@@ -28,8 +26,7 @@ public class StudyImpl implements Study {
         studyRepository.save((StudyRecordImpl) studyRecord);
     }
 
-    private Timestamp generateCurrentTimestamp() {
-        Instant instant = Instant.now();
-        return new Timestamp(instant.getEpochSecond());
+    private long generateCurrentTimestamp() {
+        return (new DateTime()).getMillis();
     }
 }

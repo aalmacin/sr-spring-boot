@@ -4,7 +4,7 @@ import com.raidrin.spacedrepetition.website.topic.*;
 import org.joda.time.DateTime;
 
 public class StudyImpl implements Study {
-    private StudyRepository studyRepository;
+    private final StudyRepository studyRepository;
 
     StudyImpl(StudyRepository studyRepository) {
         this.studyRepository = studyRepository;

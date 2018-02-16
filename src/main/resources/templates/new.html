@@ -5,7 +5,7 @@
     <title>Topics</title>
 </head>
 <body>
-<h1>Topics</h1>
+<h1>Create Topic</h1>
 <ul>
     <li>
         <a href="/topics">Click here to view topics</a>
@@ -15,11 +15,12 @@
     </li>
 </ul>
 
-<table class="table table-bordered">
-    <tr th:each="topic : ${topics}">
-        <td th:text="${topic.id}"></td>
-        <td th:text="${topic.name}"></td>
-    </tr>
-</table>
+<p th:if="${error}" th:text="${error}"></p>
+<form method="post" action="/topics/create">
+    <label>Name</label>
+    <input type="text" name="name" />
+    <button type="submit">Submit</button>
+</form>
+
 </body>
 </html>

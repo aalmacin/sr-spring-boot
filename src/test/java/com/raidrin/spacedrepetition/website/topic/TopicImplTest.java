@@ -38,14 +38,14 @@ public class TopicImplTest {
     private Study study;
 
     @Test
-    public void createTopic() {
+    public void createTopic() throws DuplicateTopicCreationException {
         topic.createTopic("Math");
         List<TopicRecordImpl> topics = topicRepository.findAll();
         assertThat(topics.size(), is(greaterThan(0)));
     }
 
     @Test
-    public void findTopic() {
+    public void findTopic() throws DuplicateTopicCreationException {
         topic.createTopic("Math");
         TopicRecord math = topic.findTopic("Math");
         assertThat(math, notNullValue());
@@ -58,7 +58,7 @@ public class TopicImplTest {
     }
 
     @Test
-    public void createSubTopicWithValidParent() throws Exception {
+    public void createSubTopicWithValidParent() throws Exception, DuplicateTopicCreationException {
         topic.createTopic("Math");
         TopicRecord math = topic.findTopic("Math");
         topic.createSubTopic("Calculus", math);
@@ -67,7 +67,7 @@ public class TopicImplTest {
     }
 
     @Test
-    public void getSubTopics() {
+    public void getSubTopics() throws DuplicateTopicCreationException {
         String mathTopicName = "Math";
         String englishTopicName = "English";
 
@@ -129,7 +129,7 @@ public class TopicImplTest {
     }
 
     @Test
-    public void getNextStudyTime() throws InvalidRatingException {
+    public void getNextStudyTime() throws InvalidRatingException, DuplicateTopicCreationException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
         TopicRecord math = topicRepository.findByName(mathTopicName);
@@ -193,15 +193,10 @@ public class TopicImplTest {
                 assertThat(nextStudyTime, equalTo(nextStudyTime));
                 break;
         }
-
-        // TODO
-        // 1. Sort the end times and get the latest one.
-        // 2. Calculate the current rating base on the previous ratings set
-        // 3. Create a schedule based on the ratings
     }
 
     @Test
-    public void getStudies() {
+    public void getStudies() throws DuplicateTopicCreationException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
         TopicRecord math = topicRepository.findByName(mathTopicName);

@@ -7,7 +7,7 @@ public enum Rating {
     EASY (4),
     VERY_EASY (5);
 
-    private int value;
+    private final int value;
 
     Rating(int value) {
         this.value = value;

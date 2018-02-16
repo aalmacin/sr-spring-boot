@@ -5,7 +5,7 @@ import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
 import java.util.ArrayList;
 
 public interface Topic {
-    void createTopic(String name);
+    void createTopic(String name) throws DuplicateTopicCreationException;
     void createSubTopic(String subTopic, TopicRecord topic);
     TopicRecord findTopic(String name);
 

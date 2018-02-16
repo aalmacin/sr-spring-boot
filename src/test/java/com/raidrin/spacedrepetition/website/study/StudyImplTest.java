@@ -1,10 +1,7 @@
 package com.raidrin.spacedrepetition.website.study;
 
 import com.raidrin.spacedrepetition.website.WebsiteApplication;
-import com.raidrin.spacedrepetition.website.topic.Topic;
-import com.raidrin.spacedrepetition.website.topic.TopicConfiguration;
-import com.raidrin.spacedrepetition.website.topic.TopicRecord;
-import com.raidrin.spacedrepetition.website.topic.TopicRepository;
+import com.raidrin.spacedrepetition.website.topic.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,7 +39,7 @@ public class StudyImplTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void startStudy() throws Exception {
+    public void startStudy() throws Exception, DuplicateTopicCreationException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
         TopicRecord math = topicRepository.findByName(mathTopicName);
@@ -65,7 +62,7 @@ public class StudyImplTest {
     }
 
     @Test
-    public void finishStudy() throws Exception {
+    public void finishStudy() throws Exception, DuplicateTopicCreationException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
         TopicRecord math = topicRepository.findByName(mathTopicName);

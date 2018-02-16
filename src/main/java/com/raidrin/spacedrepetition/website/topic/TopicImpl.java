@@ -6,19 +6,20 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 
 public class TopicImpl implements Topic {
-    private TopicRepository topicRepository;
-    private StudyRepository studyRepository;
-    private RatingCalculator ratingCalculator;
+    private final TopicRepository topicRepository;
+    private final StudyRepository studyRepository;
+    private final RatingCalculator ratingCalculator;
 
-    TopicImpl(TopicRepository topicRepository, StudyRepository studyRepository, RatingCalculator ratingCalculator) {
+    public TopicImpl(TopicRepository topicRepository, StudyRepository studyRepository, RatingCalculator ratingCalculator) {
         this.topicRepository = topicRepository;
         this.studyRepository = studyRepository;
         this.ratingCalculator = ratingCalculator;
     }
 
     @Override
-    public void createTopic(String name) {
-        topicRepository.save(new TopicRecordImpl(name));
+    public void createTopic(String name) throws DuplicateTopicCreationException {
+        if(topicRepository.findByName(name) == null) topicRepository.save(new TopicRecordImpl(name));
+        else throw new DuplicateTopicCreationException();
     }
 
     @Override

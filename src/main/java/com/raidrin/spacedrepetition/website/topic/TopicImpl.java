@@ -1,6 +1,7 @@
 package com.raidrin.spacedrepetition.website.topic;
 
 import com.raidrin.spacedrepetition.website.study.*;
+import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -43,20 +44,37 @@ public class TopicImpl implements Topic {
     }
 
     @Override
-    public ArrayList<Timestamp> getSchedule(TopicRecord topic) {
+    public Timestamp getNextStudyTime(TopicRecord topic) throws InvalidRatingException {
         ArrayList<StudyRecordImpl> studies = studyRepository.findByTopic(topic);
         ArrayList<Rating> ratings = new ArrayList<>();
 
         for (StudyRecordImpl study : studies) ratings.add(study.getRating());
 
-        int rating = this.ratingCalculator.calculateRating(ratings);
-        ArrayList<Timestamp> schedule = new ArrayList<>();
-        schedule.add(new Timestamp(1518627600));
-        schedule.add(new Timestamp(1518631200));
-        schedule.add(new Timestamp(1518634800));
-        schedule.add(new Timestamp(1518638400));
-        schedule.add(new Timestamp(1518642000));
-        return schedule;
+        int calculatedRating = this.ratingCalculator.calculateRating(ratings);
+        DateTime dateTime = new DateTime();
+        long lastStudyTime = dateTime.getMillis();
+        Timestamp nextStudyTime;
+
+        switch (calculatedRating) {
+            case 1:
+                nextStudyTime = new Timestamp(dateTime.getMillis());
+                break;
+            case 2:
+                nextStudyTime = new Timestamp(dateTime.plusMinutes(25).getMillis());
+                break;
+            case 3:
+                nextStudyTime = new Timestamp(dateTime.plusDays(1).getMillis());
+                break;
+            case 4:
+                nextStudyTime = new Timestamp(dateTime.plusDays(16).getMillis());
+                break;
+            case 5:
+                nextStudyTime = new Timestamp(dateTime.plusMonths(2).getMillis());
+                break;
+            default:
+                throw new InvalidRatingException();
+        }
+        return nextStudyTime;
     }
 
     @Override

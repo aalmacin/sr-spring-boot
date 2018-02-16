@@ -2,6 +2,7 @@ package com.raidrin.spacedrepetition.website.topic;
 
 import com.raidrin.spacedrepetition.website.WebsiteApplication;
 import com.raidrin.spacedrepetition.website.study.*;
+import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -129,18 +130,19 @@ public class TopicImplTest {
     }
 
     @Test
-    public void getSchedule() {
+    public void getSchedule() throws InvalidRatingException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
         TopicRecord math = topicRepository.findByName(mathTopicName);
 
-        ArrayList<Timestamp> schedule = topic.getSchedule(math);
-        assertThat(schedule, notNullValue());
-        assertThat(schedule.size(), equalTo(5));
         // 1
 
-        Rating[] ratings = {Rating.HARD, Rating.HARD, Rating.MEDIUM, Rating.EASY};
-        for (int i=0; i < ratings.length; i++) {
+        ArrayList<Rating> ratings = new ArrayList<>();
+        ratings.add(Rating.HARD);
+        ratings.add(Rating.HARD);
+        ratings.add(Rating.MEDIUM);
+        ratings.add(Rating.EASY);
+        for (int i=0; i < ratings.size(); i++) {
             study.startStudy(math);
         }
 
@@ -149,13 +151,49 @@ public class TopicImplTest {
 
         for (int i=0; i < studyRecordList.size(); i++) {
             StudyRecordImpl studyRecord = studyRecordList.get(i);
+            study.finishStudy(studyRecord, ratings.get(i), "No comment");
             endTimes.add(studyRecord.getEndTime());
-            study.finishStudy(studyRecord, ratings[i], "No comment");
         }
 
-        schedule = topic.getSchedule(math);
-        assertThat(schedule, notNullValue());
-        assertThat(schedule.size(), equalTo(5));
+        Timestamp nextStudyTime = topic.getNextStudyTime(math);
+        assertThat(nextStudyTime, notNullValue());
+
+        ArrayList<StudyRecordImpl> mathStudies = topic.getStudies(math);
+
+        for (StudyRecordImpl mathStudy : mathStudies) {
+            assertThat(mathStudy.getStartTime(), notNullValue());
+        }
+
+        RatingCalculatorImpl ratingCalculator = new RatingCalculatorImpl();
+        int calculatedRating = ratingCalculator.calculateRating(ratings);
+
+        Timestamp lastStudy = endTimes.get(endTimes.size() - 1);
+        DateTime dateTime = new DateTime();
+        dateTime.withMillis(lastStudy.getTime());
+
+        long lastStudyTime = dateTime.getMillis();
+
+        switch (calculatedRating) {
+            case 1:
+                assertThat(nextStudyTime.getTime(), equalTo(lastStudyTime));
+                break;
+            case 2:
+                nextStudyTime = dateTime.plusMinutes(25).getMillis();
+                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                break;
+            case 3:
+                nextStudyTime = dateTime.plusDays(1).getMillis();
+                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                break;
+            case 4:
+                nextStudyTime = dateTime.plusDays(16).getMillis();
+                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                break;
+            case 5:
+                nextStudyTime = dateTime.plusMonths(2).getMillis();
+                assertThat(nextStudyTime.getTime(), equalTo(nextStudyTime));
+                break;
+        }
 
         // 2
 

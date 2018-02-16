@@ -11,6 +11,6 @@ public interface Topic {
     TopicRecord findTopic(String name);
 
     ArrayList<TopicRecord> getSubTopics(TopicRecord topic);
-    ArrayList<Timestamp> getSchedule(TopicRecord topic);
+    Timestamp getNextStudyTime(TopicRecord topic) throws InvalidRatingException;
     ArrayList<StudyRecordImpl> getStudies(TopicRecord topic);
 }

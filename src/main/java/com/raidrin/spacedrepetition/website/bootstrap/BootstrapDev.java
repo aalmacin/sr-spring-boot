@@ -22,10 +22,14 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
 
     private void initData() {
         TopicRecordImpl math = new TopicRecordImpl("Math");
+        TopicRecordImpl algebra = new TopicRecordImpl("Algebra");
+        algebra.setParentTopic(math);
+
         TopicRecordImpl physics = new TopicRecordImpl("Physics");
         TopicRecordImpl english = new TopicRecordImpl("English");
         TopicRecordImpl music = new TopicRecordImpl("Music");
 
+        topicRepository.save(algebra);
         topicRepository.save(math);
         topicRepository.save(physics);
         topicRepository.save(english);

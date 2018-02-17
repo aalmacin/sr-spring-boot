@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class TopicsController {
     private final TopicRepository topicRepository;
@@ -46,8 +49,16 @@ public class TopicsController {
 
     @RequestMapping("/topics")
     public String topics(Model model) {
-        System.out.println(topicRepository.findAll());
-        model.addAttribute("topics", topicRepository.findAll());
+        List<TopicRecordImpl> topicRecords = topicRepository.findAll();
+
+        ArrayList<TopicRecordImpl> studyTopicRecords = new ArrayList<>();
+        for (TopicRecordImpl topicRecord: topicRecords) {
+            ArrayList<TopicRecord> childrenRecords = topicRepository.findByParentTopic(topicRecord);
+            if(childrenRecords.size() == 0) studyTopicRecords.add(topicRecord);
+        }
+
+        model.addAttribute("topics", topicRecords);
+        model.addAttribute("studyTopics", studyTopicRecords);
         return "topics";
     }
 }

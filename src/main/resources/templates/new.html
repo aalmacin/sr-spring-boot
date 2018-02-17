@@ -18,7 +18,11 @@
 <p th:if="${error}" th:text="${error}"></p>
 <form method="post" action="/topics/create">
     <label>Name</label>
-    <input type="text" name="name" />
+    <select name="parent">
+        <option th:disabled th:selected th:value></option>
+        <option th:each="topic : ${topics}" th:value="${topic.name}" th:text="${topic.name}"></option>
+    </select>
+    <input type="text" th:name="name" />
     <button type="submit">Submit</button>
 </form>
 

@@ -16,8 +16,15 @@
 </ul>
 
 <table class="table table-bordered">
+    <tr>
+        <td>ID</td>
+        <td>Parent Topic</td>
+        <td>Name</td>
+    </tr>
     <tr th:each="topic : ${topics}">
         <td th:text="${topic.id}"></td>
+        <td th:if="${topic.parentTopic}" th:text="${topic.parentTopic.name}"></td>
+        <td th:unless="${topic.parentTopic}" th:text="---"></td>
         <td th:text="${topic.name}"></td>
     </tr>
 </table>

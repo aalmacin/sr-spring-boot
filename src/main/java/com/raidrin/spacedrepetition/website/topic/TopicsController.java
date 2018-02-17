@@ -20,14 +20,21 @@ public class TopicsController {
     }
 
     @GetMapping("/topics/new")
-    public String createTopic() {
+    public String createTopic(Model model) {
+        model.addAttribute("topics", topicRepository.findAll());
         return "new";
     }
 
     @PostMapping("/topics/create")
-    public ModelAndView createTopic(@RequestParam String name, ModelMap model) {
+    public ModelAndView createTopic(@RequestParam String name, @RequestParam String parent, ModelMap model) {
         try {
-            topic.createTopic(name);
+            if(parent.equals("")) {
+                topic.createTopic(name);
+            } else {
+                System.out.println(parent);
+                TopicRecord topicRecord = topicRepository.findByName(parent);
+                topic.createSubTopic(name, topicRecord);
+            }
             model.addAttribute("name", name);
             return new ModelAndView("created", model);
         } catch (DuplicateTopicCreationException e) {
@@ -39,6 +46,7 @@ public class TopicsController {
 
     @RequestMapping("/topics")
     public String topics(Model model) {
+        System.out.println(topicRepository.findAll());
         model.addAttribute("topics", topicRepository.findAll());
         return "topics";
     }

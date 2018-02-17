@@ -9,7 +9,7 @@ public class TopicRecordImpl implements TopicRecord {
     private Long id;
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private TopicRecordImpl parentTopic;
 
     public TopicRecordImpl() {}

@@ -23,10 +23,14 @@ public class TopicImpl implements Topic {
     }
 
     @Override
-    public void createSubTopic(String subTopic, TopicRecord topic) {
-        TopicRecord childTopic = new TopicRecordImpl(subTopic);
-        ((TopicRecordImpl) childTopic).setParentTopic((TopicRecordImpl) topic);
-        topicRepository.save((TopicRecordImpl) childTopic);
+    public void createSubTopic(String subTopic, TopicRecord topic) throws DuplicateTopicCreationException {
+        if(topicRepository.findByName(subTopic) != null) {
+            throw new DuplicateTopicCreationException();
+        } else {
+            TopicRecord childTopic = new TopicRecordImpl(subTopic);
+            ((TopicRecordImpl) childTopic).setParentTopic((TopicRecordImpl) topic);
+            topicRepository.save((TopicRecordImpl) childTopic);
+        }
     }
 
     @Override

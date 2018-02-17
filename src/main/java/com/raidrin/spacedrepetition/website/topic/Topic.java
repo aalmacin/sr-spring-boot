@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface Topic {
     void createTopic(String name) throws DuplicateTopicCreationException;
-    void createSubTopic(String subTopic, TopicRecord topic);
+    void createSubTopic(String subTopic, TopicRecord topic) throws DuplicateTopicCreationException;
     TopicRecord findTopic(String name);
 
     ArrayList<TopicRecord> getSubTopics(TopicRecord topic);

@@ -61,4 +61,11 @@ public class TopicsController {
         model.addAttribute("studyTopics", studyTopicRecords);
         return "topics";
     }
+
+    @RequestMapping("/topics/study")
+    public String studyTopic(@RequestParam long id, Model model) {
+        TopicRecord topicRecord = topicRepository.findById(id).get();
+        model.addAttribute("topic", topicRecord);
+        return "study";
+    }
 }

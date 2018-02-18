@@ -10,7 +10,37 @@
 <div th:replace="fragments/nav"></div>
 
 <p th:text="${'Start Study ' + topic.name}"></p>
-<p>End Study</p>
+
+<form th:action="@{/topics/study/end(id=${topic.id})}" th:method="post">
+    <div class="form-group">
+        <label>Comment</label>
+        <input class="form-control" th:name="comment" />
+    </div>
+    <p>Rating</p>
+    <div class="form-check-inline">
+        <input class="form-check-input" checked type="radio" value="1" th:name="rating">
+        <label class="form-check-label">Very Hard</label>
+    </div>
+    <div class="form-check-inline">
+        <input class="form-check-input" type="radio" value="2" th:name="rating">
+        <label class="form-check-label">Hard</label>
+    </div>
+    <div class="form-check-inline">
+        <input class="form-check-input" type="radio" value="3" th:name="rating">
+        <label class="form-check-label">Medium</label>
+    </div>
+    <div class="form-check-inline">
+        <input class="form-check-input" type="radio" value="4" th:name="rating">
+        <label class="form-check-label">Easy</label>
+    </div>
+    <div class="form-check-inline">
+        <input class="form-check-input" type="radio" value="5" th:name="rating">
+        <label class="form-check-label">Very Easy</label>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary form-control" type="submit">End Study</button>
+    </div>
+</form>
 
 </body>
 </html>

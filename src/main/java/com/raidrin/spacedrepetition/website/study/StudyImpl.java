@@ -11,11 +11,12 @@ public class StudyImpl implements Study {
     }
 
     @Override
-    public void startStudy(TopicRecord topic) {
+    public StudyRecord startStudy(TopicRecord topic) {
         StudyRecord studyRecord = new StudyRecordImpl((TopicRecordImpl) topic);
 
         ((StudyRecordImpl) studyRecord).setStartTime(generateCurrentTimestamp());
         studyRepository.save((StudyRecordImpl) studyRecord);
+        return studyRecord;
     }
 
     @Override

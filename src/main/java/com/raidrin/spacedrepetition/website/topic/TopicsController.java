@@ -1,5 +1,6 @@
 package com.raidrin.spacedrepetition.website.topic;
 
+import com.raidrin.spacedrepetition.website.study.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,11 +16,15 @@ import java.util.List;
 @Controller
 public class TopicsController {
     private final TopicRepository topicRepository;
+    private final StudyRepository studyRepository;
     private final Topic topic;
+    private final Study study;
 
-    public TopicsController(TopicRepository topicRepository, Topic topic) {
+    public TopicsController(TopicRepository topicRepository, StudyRepository studyRepository, Topic topic, Study study) {
         this.topicRepository = topicRepository;
+        this.studyRepository = studyRepository;
         this.topic = topic;
+        this.study = study;
     }
 
     @GetMapping("/topics/new")
@@ -64,8 +69,61 @@ public class TopicsController {
 
     @RequestMapping("/topics/study")
     public String studyTopic(@RequestParam long id, Model model) {
-        TopicRecord topicRecord = topicRepository.findById(id).get();
+        TopicRecordImpl topicRecord = topicRepository.findById(id).get();
+        StudyRecord studyRecord = null;
+
+        ArrayList<StudyRecordImpl> studyRecords = studyRepository.findByTopic(topicRecord);
+        for (StudyRecordImpl tempStudyRecord : studyRecords) {
+            if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
+        }
+        if(studyRecord == null) studyRecord = study.startStudy(topicRecord);
+
         model.addAttribute("topic", topicRecord);
+        model.addAttribute("studyRecord", studyRecord);
+        System.out.println(studyRecords);
         return "study";
+    }
+
+    @RequestMapping("/topics/study/end")
+    public String studyTopic(@RequestParam long id,
+                             @RequestParam int rating,
+                             @RequestParam String comment,
+                             Model model) throws InvalidRatingException, StudyRecordNotFoundException {
+        TopicRecordImpl topicRecord = topicRepository.findById(id).get();
+        StudyRecord studyRecord = null;
+
+        ArrayList<StudyRecordImpl> studyRecords = studyRepository.findByTopic(topicRecord);
+        for (StudyRecordImpl tempStudyRecord : studyRecords) {
+            if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
+        }
+
+        if(studyRecord == null) throw new StudyRecordNotFoundException();
+
+        Rating finishedRating;
+        switch (rating) {
+            case 1:
+                finishedRating = Rating.VERY_HARD;
+                break;
+            case 2:
+                finishedRating = Rating.HARD;
+                break;
+            case 3:
+                finishedRating = Rating.MEDIUM;
+                break;
+            case 4:
+                finishedRating = Rating.EASY;
+                break;
+            case 5:
+                finishedRating = Rating.VERY_EASY;
+                break;
+            default:
+                throw new InvalidRatingException();
+        }
+
+        study.finishStudy(studyRecord, finishedRating, comment);
+
+        model.addAttribute("topic", topicRecord);
+        model.addAttribute("study", studyRecord);
+        return "endstudy";
     }
 }

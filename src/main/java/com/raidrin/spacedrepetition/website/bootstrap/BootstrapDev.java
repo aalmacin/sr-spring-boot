@@ -37,7 +37,7 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
 
         StudyRecordImpl session1 = new StudyRecordImpl();
         session1.setRating(Rating.HARD);
-        session1.setTopic(math);
+        session1.setTopic(english);
         studyRepository.save(session1);
     }
 

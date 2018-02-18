@@ -9,6 +9,7 @@ public class StudyRecordImpl implements StudyRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private Rating rating;
     private long startTime;
     private long endTime;

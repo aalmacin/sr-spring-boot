@@ -51,14 +51,65 @@ public class TopicsController {
     public String topics(Model model) {
         List<TopicRecordImpl> topicRecords = topicRepository.findAll();
 
-        ArrayList<TopicRecordImpl> studyTopicRecords = new ArrayList<>();
+        ArrayList<ReturnTopic> returnTopics = new ArrayList<>();
         for (TopicRecordImpl topicRecord: topicRecords) {
             ArrayList<TopicRecord> childrenRecords = topicRepository.findByParentTopic(topicRecord);
-            if(childrenRecords.size() == 0) studyTopicRecords.add(topicRecord);
+            ReturnTopic returnTopic = new ReturnTopic(
+                    topicRecord.getId(),
+                    (topicRecord.getParentTopic() != null) ? topicRecord.getParentTopic().getName() : "---",
+                    topicRecord.getName(),
+                    childrenRecords.size() == 0);
+            returnTopics.add(returnTopic);
         }
 
-        model.addAttribute("topics", topicRecords);
-        model.addAttribute("studyTopics", studyTopicRecords);
+        model.addAttribute("topics", returnTopics);
         return "topics";
+    }
+
+    // TODO this might be an antipattern or a bad idea
+    class ReturnTopic {
+        private long id;
+        private String parentTopic;
+        private String name;
+        private boolean study;
+
+        public ReturnTopic(long id, String parentTopic, String name, boolean study) {
+            this.id = id;
+            this.parentTopic = parentTopic;
+            this.name = name;
+            this.study = study;
+        }
+
+        public boolean isStudy() {
+            return study;
+        }
+
+        public void setStudy(boolean study) {
+            this.study = study;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getParentTopic() {
+            return parentTopic;
+        }
+
+        public void setParentTopic(String parentTopic) {
+            this.parentTopic = parentTopic;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }

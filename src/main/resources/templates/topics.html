@@ -21,7 +21,8 @@
         <td th:text="${topic.id}"></td>
         <td th:text="${topic.name}"></td>
         <td th:text="${topic.parentTopic}"></td>
-        <td th:text="${topic.nextStudyTime}"></td>
+        <td th:if="${topic.study}" th:text="${topic.nextStudyTime}"></td>
+        <td th:unless="${topic.study}">---</td>
         <td th:if="${topic.study}"><a th:href="@{/topics/study/(id=${topic.id})}" th:text="Study"></a></td>
         <td th:unless="${topic.study}">Cannot study. Use subtopic.</td>
     </tr>

@@ -5,6 +5,7 @@ import com.raidrin.spacedrepetition.website.study.StudyRecordImpl;
 import com.raidrin.spacedrepetition.website.study.StudyRepository;
 import com.raidrin.spacedrepetition.website.topic.TopicRecordImpl;
 import com.raidrin.spacedrepetition.website.topic.TopicRepository;
+import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,10 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
         topicRepository.save(music);
 
         StudyRecordImpl session1 = new StudyRecordImpl();
-        session1.setRating(Rating.HARD);
+        session1.setRating(Rating.EASY);
+        DateTime dateTime = new DateTime();
+        session1.setStartTime(dateTime.getMillis());
+        session1.setEndTime(dateTime.getMillis());
         session1.setTopic(english);
         studyRepository.save(session1);
     }

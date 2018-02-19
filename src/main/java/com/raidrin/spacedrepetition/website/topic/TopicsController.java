@@ -1,6 +1,9 @@
 package com.raidrin.spacedrepetition.website.topic;
 
 import com.raidrin.spacedrepetition.website.study.*;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -53,35 +56,43 @@ public class TopicsController {
     }
 
     @RequestMapping("/topics")
-    public String topics(Model model) {
+    public String topics(Model model) throws InvalidRatingException {
         List<TopicRecordImpl> topicRecords = topicRepository.findAll();
 
-        ArrayList<TopicRecordImpl> studyTopicRecords = new ArrayList<>();
+        ArrayList<TopicsViewModel> returnTopics = new ArrayList<>();
         for (TopicRecordImpl topicRecord: topicRecords) {
             ArrayList<TopicRecord> childrenRecords = topicRepository.findByParentTopic(topicRecord);
-            if(childrenRecords.size() == 0) studyTopicRecords.add(topicRecord);
+            TopicsViewModel returnTopic = new TopicsViewModel(
+                    topicRecord.getId(),
+                    (topicRecord.getParentTopic() != null) ? topicRecord.getParentTopic().getName() : "---",
+                    topicRecord.getName(),
+                    childrenRecords.size() == 0,
+                    topic.getNextStudyTime(topicRecord));
+            returnTopics.add(returnTopic);
         }
 
-        model.addAttribute("topics", topicRecords);
-        model.addAttribute("studyTopics", studyTopicRecords);
+        model.addAttribute("topics", returnTopics);
         return "topics";
     }
 
     @RequestMapping("/topics/study")
-    public String studyTopic(@RequestParam long id, Model model) {
-        TopicRecordImpl topicRecord = topicRepository.findById(id).get();
-        StudyRecord studyRecord = null;
+    public String studyTopic(@RequestParam long id, Model model) throws TopicNotFoundException {
+        if(topicRepository.findById(id).isPresent()) {
+            TopicRecordImpl topicRecord = topicRepository.findById(id).get();
+            StudyRecord studyRecord = null;
 
-        ArrayList<StudyRecordImpl> studyRecords = studyRepository.findByTopic(topicRecord);
-        for (StudyRecordImpl tempStudyRecord : studyRecords) {
-            if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
+            ArrayList<StudyRecordImpl> studyRecords = studyRepository.findByTopic(topicRecord);
+            for (StudyRecordImpl tempStudyRecord : studyRecords) {
+                if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
+            }
+            if(studyRecord == null) studyRecord = study.startStudy(topicRecord);
+
+            model.addAttribute("topic", topicRecord);
+            model.addAttribute("studyRecord", studyRecord);
+            return "study";
+        } else {
+            throw new TopicNotFoundException();
         }
-        if(studyRecord == null) studyRecord = study.startStudy(topicRecord);
-
-        model.addAttribute("topic", topicRecord);
-        model.addAttribute("studyRecord", studyRecord);
-        System.out.println(studyRecords);
-        return "study";
     }
 
     @RequestMapping("/topics/study/end")
@@ -94,10 +105,10 @@ public class TopicsController {
 
         ArrayList<StudyRecordImpl> studyRecords = studyRepository.findByTopic(topicRecord);
         for (StudyRecordImpl tempStudyRecord : studyRecords) {
-            if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
+            if (tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
         }
 
-        if(studyRecord == null) throw new StudyRecordNotFoundException();
+        if (studyRecord == null) throw new StudyRecordNotFoundException();
 
         Rating finishedRating;
         switch (rating) {
@@ -125,5 +136,67 @@ public class TopicsController {
         model.addAttribute("topic", topicRecord);
         model.addAttribute("study", studyRecord);
         return "endstudy";
+    }
+
+    class TopicsViewModel {
+        private long id;
+        private String parentTopic;
+        private String name;
+        private boolean study;
+        private String nextStudyTime;
+
+        TopicsViewModel(long id, String parentTopic, String name, boolean study, long calculatedNextStudyTime) {
+            this.id = id;
+            this.parentTopic = parentTopic;
+            this.name = name;
+            this.study = study;
+            this.nextStudyTime = generateNextStudyTime(calculatedNextStudyTime);
+        }
+
+        private String generateNextStudyTime(long calculatedNextStudyTime) {
+            DateTime dateTime = new DateTime();
+            DateTimeFormatter fmt = DateTimeFormat.forPattern("MMMM dd, yyyy hh:mma");
+            return dateTime.withMillis(calculatedNextStudyTime).toString(fmt);
+        }
+
+        public boolean isStudy() {
+            return study;
+        }
+
+        public void setStudy(boolean study) {
+            this.study = study;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getParentTopic() {
+            return parentTopic;
+        }
+
+        public void setParentTopic(String parentTopic) {
+            this.parentTopic = parentTopic;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getNextStudyTime() {
+            return nextStudyTime;
+        }
+
+        public void setNextStudyTime(String nextStudyTime) {
+            this.nextStudyTime = nextStudyTime;
+        }
     }
 }

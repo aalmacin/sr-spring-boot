@@ -12,16 +12,18 @@
 <table class="table table-bordered">
     <tr>
         <td>ID</td>
-        <td>Parent Topic</td>
         <td>Name</td>
+        <td>Parent Topic</td>
+        <td>Next Study Time</td>
         <td>Study</td>
     </tr>
     <tr th:each="topic : ${topics}">
         <td th:text="${topic.id}"></td>
-        <td th:if="${topic.parentTopic}" th:text="${topic.parentTopic.name}"></td>
-        <td th:unless="${topic.parentTopic}" th:text="---"></td>
         <td th:text="${topic.name}"></td>
-        <td th:if="${studyTopics.indexOf(topic) >= 0}"><a th:href="@{/topics/study(id=${topic.id})}" th:text="Study"></a></td>
+        <td th:text="${topic.parentTopic}"></td>
+        <td th:text="${topic.nextStudyTime}"></td>
+        <td th:if="${topic.study}"><a th:href="@{/topics/study/(id=${topic.id})}" th:text="Study"></a></td>
+        <td th:unless="${topic.study}">Cannot study. Use subtopic.</td>
     </tr>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

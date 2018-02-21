@@ -76,6 +76,22 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>mysql</groupId>-->
+			<!--<artifactId>mysql-connector-java</artifactId>-->
+		<!--</dependency>-->
+
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -86,27 +102,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>dev</id>
-            <dependencies>
-				<dependency>
-					<groupId>com.h2database</groupId>
-					<artifactId>h2</artifactId>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<dependencies>
-				<dependency>
-					<groupId>mysql</groupId>
-					<artifactId>mysql-connector-java</artifactId>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
-
 
 </project>

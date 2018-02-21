@@ -41,3 +41,8 @@
 - Login, profile, registration
 - Categorization, schedule, sub-topics
 - Algorithm for scheduling
+
+---
+
+## Updates
+- Schedule only exists to show the next study time

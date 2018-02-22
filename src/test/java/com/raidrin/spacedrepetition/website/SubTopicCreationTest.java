@@ -1,11 +1,11 @@
 package com.raidrin.spacedrepetition.website;
 
-import com.raidrin.spacedrepetition.website.study.RatingCalculatorConfiguration;
-import com.raidrin.spacedrepetition.website.study.StudyConfiguration;
-import com.raidrin.spacedrepetition.website.topic.DuplicateTopicCreationException;
-import com.raidrin.spacedrepetition.website.topic.Topic;
-import com.raidrin.spacedrepetition.website.topic.TopicConfiguration;
-import com.raidrin.spacedrepetition.website.topic.TopicRecord;
+import com.raidrin.spacedrepetition.website.infrastructure.configs.RatingCalculatorConfiguration;
+import com.raidrin.spacedrepetition.website.infrastructure.configs.StudyConfiguration;
+import com.raidrin.spacedrepetition.website.domain.topic.DuplicateTopicCreationException;
+import com.raidrin.spacedrepetition.website.domain.topic.TopicService;
+import com.raidrin.spacedrepetition.website.infrastructure.configs.TopicConfiguration;
+import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 @DataJpaTest
 public class SubTopicCreationTest {
     @Autowired
-    private Topic topic;
+    private TopicService topic;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -36,11 +36,11 @@ public class SubTopicCreationTest {
         topic.createTopic("Geography");
         topic.createTopic("History");
 
-        TopicRecord geography = topic.findTopic("Geography");
+        Topic geography = topic.findTopic("Geography");
 
         topic.createSubTopic("Asia", geography);
 
-        TopicRecord asia = topic.findTopic("Asia");
+        Topic asia = topic.findTopic("Asia");
         assertThat(asia, is(notNullValue()));
 
         topic.createSubTopic("Asia", geography);
@@ -52,12 +52,12 @@ public class SubTopicCreationTest {
         topic.createTopic("Geography");
         topic.createTopic("History");
 
-        TopicRecord history = topic.findTopic("History");
-        TopicRecord geography = topic.findTopic("Geography");
+        Topic history = topic.findTopic("History");
+        Topic geography = topic.findTopic("Geography");
 
         topic.createSubTopic("Asia", history);
 
-        TopicRecord asia = topic.findTopic("Asia");
+        Topic asia = topic.findTopic("Asia");
         assertThat(asia, is(notNullValue()));
 
         topic.createSubTopic("Asia", geography);
@@ -67,11 +67,11 @@ public class SubTopicCreationTest {
     public void created() throws DuplicateTopicCreationException {
         topic.createTopic("Geography");
 
-        TopicRecord geography = topic.findTopic("Geography");
+        Topic geography = topic.findTopic("Geography");
 
         topic.createSubTopic("Asia", geography);
 
-        TopicRecord asia = topic.findTopic("Asia");
+        Topic asia = topic.findTopic("Asia");
         assertThat(asia, is(notNullValue()));
     }
 
@@ -79,11 +79,11 @@ public class SubTopicCreationTest {
     public void createdWithCorrectParent() throws DuplicateTopicCreationException {
         topic.createTopic("Geography");
 
-        TopicRecord geography = topic.findTopic("Geography");
+        Topic geography = topic.findTopic("Geography");
 
         topic.createSubTopic("Asia", geography);
 
-        TopicRecord asia = topic.findTopic("Asia");
+        Topic asia = topic.findTopic("Asia");
         assertThat(asia, is(notNullValue()));
         assertThat(asia.getParentTopic(), is(equalTo(geography)));
     }

@@ -1,8 +1,9 @@
 package com.raidrin.spacedrepetition.website;
 
-import com.raidrin.spacedrepetition.website.study.RatingCalculatorConfiguration;
-import com.raidrin.spacedrepetition.website.study.StudyConfiguration;
-import com.raidrin.spacedrepetition.website.topic.*;
+import com.raidrin.spacedrepetition.website.infrastructure.configs.RatingCalculatorConfiguration;
+import com.raidrin.spacedrepetition.website.infrastructure.configs.StudyConfiguration;
+import com.raidrin.spacedrepetition.website.infrastructure.configs.TopicConfiguration;
+import com.raidrin.spacedrepetition.website.domain.topic.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertThat;
 @DataJpaTest
 public class TopicCreationTest {
     @Autowired
-    private Topic topic;
+    private TopicService topic;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -36,7 +37,7 @@ public class TopicCreationTest {
     public void createTopic() throws DuplicateTopicCreationException {
         topic.createTopic("Geography");
 
-        TopicRecord topicRecord = topic.findTopic("Geography");
+        Topic topicRecord = topic.findTopic("Geography");
         assertThat(topicRecord, notNullValue());
     }
 }

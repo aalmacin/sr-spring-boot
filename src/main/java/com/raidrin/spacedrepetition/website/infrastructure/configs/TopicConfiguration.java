@@ -1,7 +1,7 @@
 package com.raidrin.spacedrepetition.website.infrastructure.configs;
 
 import com.raidrin.spacedrepetition.website.infrastructure.database.TopicServiceImpl;
-import com.raidrin.spacedrepetition.website.domain.study.rating.RatingCalculatorService;
+import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorService;
 import com.raidrin.spacedrepetition.website.infrastructure.database.StudyRepository;
 import com.raidrin.spacedrepetition.website.domain.topic.TopicService;
 import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;

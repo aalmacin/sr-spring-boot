@@ -11,7 +11,7 @@ import com.raidrin.spacedrepetition.website.infrastructure.database.TopicReposit
 import com.raidrin.spacedrepetition.website.domain.study.*;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
-import com.raidrin.spacedrepetition.website.domain.study.rating.RatingCalculatorServiceImpl;
+import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorServiceImpl;
 import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;

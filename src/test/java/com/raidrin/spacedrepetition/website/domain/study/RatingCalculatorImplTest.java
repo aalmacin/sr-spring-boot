@@ -1,8 +1,8 @@
 package com.raidrin.spacedrepetition.website.domain.study;
 
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
-import com.raidrin.spacedrepetition.website.domain.study.rating.RatingCalculatorService;
-import com.raidrin.spacedrepetition.website.domain.study.rating.RatingCalculatorServiceImpl;
+import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorService;
+import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

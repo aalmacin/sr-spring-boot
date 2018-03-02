@@ -5,7 +5,7 @@ import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import com.raidrin.spacedrepetition.website.domain.topic.TopicService;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
-import com.raidrin.spacedrepetition.website.domain.study.rating.RatingCalculatorService;
+import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorService;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;

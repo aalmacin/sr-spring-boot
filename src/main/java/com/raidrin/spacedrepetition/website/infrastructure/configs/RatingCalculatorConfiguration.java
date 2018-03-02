@@ -1,7 +1,7 @@
 package com.raidrin.spacedrepetition.website.infrastructure.configs;
 
-import com.raidrin.spacedrepetition.website.domain.study.rating.RatingCalculatorService;
-import com.raidrin.spacedrepetition.website.domain.study.rating.RatingCalculatorServiceImpl;
+import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorService;
+import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

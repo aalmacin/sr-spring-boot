@@ -1,7 +1,9 @@
 package com.raidrin.spacedrepetition.website.infrastructure.database;
 
+import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.domain.topic.DuplicateTopicCreationException;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
+import com.raidrin.spacedrepetition.website.domain.topic.TopicNotFoundException;
 import com.raidrin.spacedrepetition.website.domain.topic.TopicService;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
@@ -9,6 +11,7 @@ import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.Ratin
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class TopicServiceImpl implements TopicService {
     private final TopicRepository topicRepository;
@@ -50,10 +53,10 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public long getNextStudyTime(Topic topic) throws InvalidRatingException {
-        ArrayList<StudyImpl> studies = studyRepository.findByTopic(topic);
+        ArrayList<Study> studies = studyRepository.findByTopic(topic);
         ArrayList<Rating> ratings = new ArrayList<>();
 
-        for (StudyImpl study : studies) ratings.add(study.getRating());
+        for (Study study : studies) ratings.add(study.getRating());
 
         int calculatedRating = this.ratingCalculator.calculateRating(ratings);
         DateTime dateTime = new DateTime();
@@ -82,7 +85,26 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public ArrayList<StudyImpl> getStudies(Topic topic) {
+    public ArrayList<Study> getStudies(Topic topic) {
         return studyRepository.findByTopic(topic);
+    }
+
+    @Override
+    public ArrayList<Topic> getAll() {
+        ArrayList<Topic> topics = new ArrayList<>();
+        topics.addAll(topicRepository.findAll());
+        return topics;
+    }
+
+    @Override
+    public Topic getByName(String name) {
+        return topicRepository.findByName(name);
+    }
+
+    @Override
+    public Topic getById(long id) throws TopicNotFoundException {
+        Optional<TopicImpl> result = topicRepository.findById(id);
+        if(result.isPresent()) return result.get();
+        else throw new TopicNotFoundException();
     }
 }

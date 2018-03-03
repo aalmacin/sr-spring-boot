@@ -53,7 +53,7 @@ public class StudyImplTest {
 
         study.startStudy(math);
         Topic topicRecord = topic.findTopic(mathTopicName);
-        ArrayList<StudyImpl> studyRecord = studyRepository.findByTopic(topicRecord);
+        ArrayList<Study> studyRecord = studyRepository.findByTopic(topicRecord);
 
         assertThat(studyRecord.size(), is(equalTo(1)));
 
@@ -61,7 +61,7 @@ public class StudyImplTest {
         topicRecord = topic.findTopic(mathTopicName);
         studyRecord = studyRepository.findByTopic(topicRecord);
 
-        for (StudyImpl tempStudyRecord : studyRecord) {
+        for (Study tempStudyRecord : studyRecord) {
             assertThat(tempStudyRecord.getStartTime(), notNullValue());
         }
 

@@ -6,6 +6,8 @@ import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 import com.raidrin.spacedrepetition.website.domain.topic.*;
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+
 public class StudyServiceImpl implements StudyService {
     private final StudyRepository studyRepository;
 
@@ -28,6 +30,11 @@ public class StudyServiceImpl implements StudyService {
         ((StudyImpl) studyRecord).setEndTime(generateCurrentTimestamp());
         ((StudyImpl) studyRecord).setRating(rating);
         studyRepository.save((StudyImpl) studyRecord);
+    }
+
+    @Override
+    public ArrayList<Study> getByTopic(Topic topic) {
+        return studyRepository.findByTopic(topic);
     }
 
     private long generateCurrentTimestamp() {

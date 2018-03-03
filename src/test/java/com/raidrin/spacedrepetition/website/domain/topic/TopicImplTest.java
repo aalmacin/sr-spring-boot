@@ -167,9 +167,9 @@ public class TopicImplTest {
         long nextStudyTime = topic.getNextStudyTime(math);
         assertThat(nextStudyTime, notNullValue());
 
-        ArrayList<StudyImpl> mathStudies = topic.getStudies(math);
+        ArrayList<Study> mathStudies = topic.getStudies(math);
 
-        for (StudyImpl mathStudy : mathStudies) {
+        for (Study mathStudy : mathStudies) {
             assertThat(mathStudy.getStartTime(), notNullValue());
         }
 
@@ -211,7 +211,7 @@ public class TopicImplTest {
         topic.createTopic(mathTopicName);
         Topic math = topicRepository.findByName(mathTopicName);
 
-        ArrayList<StudyImpl> studies = topic.getStudies(math);
+        ArrayList<Study> studies = topic.getStudies(math);
         assertThat(studies.size(), is(equalTo(0)));
 
         study.startStudy(math);

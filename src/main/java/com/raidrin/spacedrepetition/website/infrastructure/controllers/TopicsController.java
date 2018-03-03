@@ -1,9 +1,5 @@
 package com.raidrin.spacedrepetition.website.infrastructure.controllers;
 
-import com.raidrin.spacedrepetition.website.infrastructure.database.StudyImpl;
-import com.raidrin.spacedrepetition.website.infrastructure.database.StudyRepository;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicImpl;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
 import com.raidrin.spacedrepetition.website.domain.study.*;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
@@ -22,21 +18,17 @@ import java.util.List;
 
 @Controller
 public class TopicsController {
-    private final TopicRepository topicRepository;
-    private final StudyRepository studyRepository;
     private final TopicService topic;
     private final StudyService study;
 
-    public TopicsController(TopicRepository topicRepository, StudyRepository studyRepository, TopicService topic, StudyService study) {
-        this.topicRepository = topicRepository;
-        this.studyRepository = studyRepository;
+    public TopicsController(TopicService topic, StudyService study) {
         this.topic = topic;
         this.study = study;
     }
 
     @GetMapping("/topics/new")
     public String createTopic(Model model) {
-        model.addAttribute("topics", topicRepository.findAll());
+        model.addAttribute("topics", topic.getAll());
         return "new";
     }
 
@@ -46,8 +38,7 @@ public class TopicsController {
             if(parent.equals("")) {
                 topic.createTopic(name);
             } else {
-                System.out.println(parent);
-                Topic topicRecord = topicRepository.findByName(parent);
+                Topic topicRecord = topic.getByName(name);
                 topic.createSubTopic(name, topicRecord);
             }
             model.addAttribute("name", name);
@@ -61,11 +52,11 @@ public class TopicsController {
 
     @RequestMapping("/topics")
     public String topics(Model model) throws InvalidRatingException {
-        List<TopicImpl> topicRecords = topicRepository.findAll();
+        List<Topic> topicRecords = topic.getAll();
 
         ArrayList<TopicsViewModel> returnTopics = new ArrayList<>();
-        for (TopicImpl topicRecord: topicRecords) {
-            ArrayList<Topic> childrenRecords = topicRepository.findByParentTopic(topicRecord);
+        for (Topic topicRecord: topicRecords) {
+            ArrayList<Topic> childrenRecords = topic.getSubTopics(topicRecord);
             TopicsViewModel returnTopic = new TopicsViewModel(
                     topicRecord.getId(),
                     (topicRecord.getParentTopic() != null) ? topicRecord.getParentTopic().getName() : "---",
@@ -81,22 +72,18 @@ public class TopicsController {
 
     @RequestMapping("/topics/study")
     public String studyTopic(@RequestParam long id, Model model) throws TopicNotFoundException {
-        if(topicRepository.findById(id).isPresent()) {
-            TopicImpl topicRecord = topicRepository.findById(id).get();
-            Study studyRecord = null;
+        Topic topicRecord = topic.getById(id);
+        Study studyRecord = null;
 
-            ArrayList<StudyImpl> studyRecords = studyRepository.findByTopic(topicRecord);
-            for (StudyImpl tempStudyRecord : studyRecords) {
-                if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
-            }
-            if(studyRecord == null) studyRecord = study.startStudy(topicRecord);
-
-            model.addAttribute("topic", topicRecord);
-            model.addAttribute("studyRecord", studyRecord);
-            return "study";
-        } else {
-            throw new TopicNotFoundException();
+        ArrayList<Study> studyRecords = study.getByTopic(topicRecord);
+        for (Study tempStudyRecord : studyRecords) {
+            if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
         }
+        if(studyRecord == null) studyRecord = study.startStudy(topicRecord);
+
+        model.addAttribute("topic", topicRecord);
+        model.addAttribute("studyRecord", studyRecord);
+        return "study";
     }
 
     @RequestMapping("/topics/study/end")
@@ -104,11 +91,16 @@ public class TopicsController {
                              @RequestParam int rating,
                              @RequestParam String comment,
                              Model model) throws InvalidRatingException, StudyRecordNotFoundException {
-        TopicImpl topicRecord = topicRepository.findById(id).get();
+        Topic topicRecord = null;
+        try {
+            topicRecord = topic.getById(id);
+        } catch (TopicNotFoundException e) {
+            e.printStackTrace();
+        }
         Study studyRecord = null;
 
-        ArrayList<StudyImpl> studyRecords = studyRepository.findByTopic(topicRecord);
-        for (StudyImpl tempStudyRecord : studyRecords) {
+        ArrayList<Study> studyRecords = study.getByTopic(topicRecord);
+        for (Study tempStudyRecord : studyRecords) {
             if (tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
         }
 

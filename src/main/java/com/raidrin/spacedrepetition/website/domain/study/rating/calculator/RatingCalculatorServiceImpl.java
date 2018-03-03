@@ -12,13 +12,13 @@ public class RatingCalculatorServiceImpl implements RatingCalculatorService {
     public int calculateRating(ArrayList<Rating> ratings) {
         int ratingsCount = getRatingsCount(ratings);
 
-        ArrayList<ArrayList<Rating>> splitRatings = splitRatings(ratings, ratingsCount);
+        ArrayList<ArrayList<Rating>> splitRatings = groupRatings(ratings, ratingsCount);
 
         double firstTotal = getFirstTotal(splitRatings);
 
         ArrayList<Double> totalAvgs = getTotalAvgs(splitRatings);
 
-        double otherTotals = getOtherTotals(totalAvgs);
+        double otherTotals = getRemainingTotals(totalAvgs);
 
         return getWeightedAverage(firstTotal, otherTotals);
     }
@@ -27,7 +27,7 @@ public class RatingCalculatorServiceImpl implements RatingCalculatorService {
         return (int) Math.ceil((float) ratings.size() / SET_COUNT);
     }
 
-    private ArrayList<ArrayList<Rating>> splitRatings(ArrayList<Rating> ratings, int ratingsCount) {
+    private ArrayList<ArrayList<Rating>> groupRatings(ArrayList<Rating> ratings, int ratingsCount) {
         ArrayList<ArrayList<Rating>> splitRatings = new ArrayList<>();
 
         for (int i = 0; i < ratingsCount; i++) {
@@ -54,15 +54,17 @@ public class RatingCalculatorServiceImpl implements RatingCalculatorService {
 
     private ArrayList<Double> getTotalAvgs(ArrayList<ArrayList<Rating>> splitRatings) {
         ArrayList<Double> totalAvgs = new ArrayList<>();
-        for (ArrayList<Rating> ratingBuffer : splitRatings) {
-            double totalAvg = ratingBuffer.stream().mapToDouble(Rating::getValue).sum() / ratingBuffer.size();
+        for (ArrayList<Rating> tempRatings : splitRatings) {
+            final double totalSum = tempRatings.stream().mapToDouble(Rating::getValue).sum();
+            double totalAvg = totalSum / tempRatings.size();
             totalAvgs.add(totalAvg);
         }
         return totalAvgs;
     }
 
-    private double getOtherTotals(ArrayList<Double> totalAvgs) {
-        return (totalAvgs.size() > 0) ? totalAvgs.stream().mapToDouble(Double::doubleValue).sum() / totalAvgs.size() : 1;
+    private double getRemainingTotals(ArrayList<Double> totalAvgs) {
+        final double getRemainingTotalSum = totalAvgs.stream().mapToDouble(Double::doubleValue).sum();
+        return (totalAvgs.size() > 0) ? getRemainingTotalSum / totalAvgs.size() : 1;
     }
 
     private int getWeightedAverage(double firstTotal, double otherTotals) {

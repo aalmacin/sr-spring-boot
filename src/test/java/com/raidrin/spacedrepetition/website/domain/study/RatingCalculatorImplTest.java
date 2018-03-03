@@ -25,6 +25,69 @@ public class RatingCalculatorImplTest {
 
     @Parameterized.Parameters
     public static Iterable<Object[]> data() {
+        ArrayList<Rating> ratings1 = getRatings1();
+        ArrayList<Rating> ratings2 = getRatings2();
+        ArrayList<Rating> ratings3 = getRatings3();
+        ArrayList<Rating> ratings4 = getRatings4();
+        ArrayList<Rating> ratings5 = new ArrayList<>();
+
+        return Arrays.asList(
+                new Object[][] {
+                        { ratings1, 4},
+                        { ratings2, 3},
+                        { ratings3, 3},
+                        { ratings4, 2},
+                        { ratings5, 1}
+                }
+        );
+    }
+
+    private static ArrayList<Rating> getRatings4() {
+        ArrayList<Rating> ratings4 = new ArrayList<>();
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.HARD);
+        ratings4.add(Rating.MEDIUM);
+        ratings4.add(Rating.EASY);
+        ratings4.add(Rating.HARD);
+
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+        return ratings4;
+    }
+
+    private static ArrayList<Rating> getRatings3() {
+        ArrayList<Rating> ratings3 = new ArrayList<>();
+        ratings3.add(Rating.MEDIUM);
+        ratings3.add(Rating.VERY_HARD);
+        ratings3.add(Rating.MEDIUM);
+        ratings3.add(Rating.EASY);
+        ratings3.add(Rating.VERY_EASY);
+
+        ratings3.add(Rating.MEDIUM);
+        ratings3.add(Rating.HARD);
+        ratings3.add(Rating.VERY_HARD);
+        ratings3.add(Rating.VERY_EASY);
+        return ratings3;
+    }
+
+    private static ArrayList<Rating> getRatings2() {
+        ArrayList<Rating> ratings2 = new ArrayList<>();
+        ratings2.add(Rating.VERY_EASY);
+        ratings2.add(Rating.EASY);
+        ratings2.add(Rating.EASY);
+        return ratings2;
+    }
+
+    private static ArrayList<Rating> getRatings1() {
         ArrayList<Rating> ratings1 = new ArrayList<>();
         ratings1.add(Rating.VERY_EASY);
         ratings1.add(Rating.EASY);
@@ -47,55 +110,7 @@ public class RatingCalculatorImplTest {
         ratings1.add(Rating.HARD);
         ratings1.add(Rating.VERY_HARD);
         ratings1.add(Rating.VERY_HARD);
-
-        ArrayList<Rating> ratings2 = new ArrayList<>();
-        ratings2.add(Rating.VERY_EASY);
-        ratings2.add(Rating.EASY);
-        ratings2.add(Rating.EASY);
-
-        ArrayList<Rating> ratings3 = new ArrayList<>();
-        ratings3.add(Rating.MEDIUM);
-        ratings3.add(Rating.VERY_HARD);
-        ratings3.add(Rating.MEDIUM);
-        ratings3.add(Rating.EASY);
-        ratings3.add(Rating.VERY_EASY);
-
-        ratings3.add(Rating.MEDIUM);
-        ratings3.add(Rating.HARD);
-        ratings3.add(Rating.VERY_HARD);
-        ratings3.add(Rating.VERY_EASY);
-
-        ArrayList<Rating> ratings4 = new ArrayList<>();
-        ratings4.add(Rating.VERY_HARD);
-        ratings4.add(Rating.VERY_HARD);
-        ratings4.add(Rating.VERY_HARD);
-        ratings4.add(Rating.VERY_HARD);
-        ratings4.add(Rating.VERY_HARD);
-
-        ratings4.add(Rating.VERY_EASY);
-        ratings4.add(Rating.HARD);
-        ratings4.add(Rating.MEDIUM);
-        ratings4.add(Rating.EASY);
-        ratings4.add(Rating.HARD);
-
-        ratings4.add(Rating.VERY_EASY);
-        ratings4.add(Rating.VERY_EASY);
-        ratings4.add(Rating.VERY_EASY);
-        ratings4.add(Rating.VERY_EASY);
-        ratings4.add(Rating.VERY_EASY);
-
-
-        ArrayList<Rating> ratings5 = new ArrayList<>();
-
-        return Arrays.asList(
-                new Object[][] {
-                        { ratings1, 4},
-                        { ratings2, 3},
-                        { ratings3, 3},
-                        { ratings4, 2},
-                        { ratings5, 1}
-                }
-        );
+        return ratings1;
     }
 
     @Test

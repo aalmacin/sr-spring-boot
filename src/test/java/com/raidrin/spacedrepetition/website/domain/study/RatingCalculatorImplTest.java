@@ -26,59 +26,74 @@ public class RatingCalculatorImplTest {
     @Parameterized.Parameters
     public static Iterable<Object[]> data() {
         ArrayList<Rating> ratings1 = new ArrayList<>();
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_EASY);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.EASY);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.HARD);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings1.add(Rating.VERY_HARD);
+        ratings1.add(Rating.VERY_EASY);
+        ratings1.add(Rating.EASY);
+        ratings1.add(Rating.EASY);
+        ratings1.add(Rating.EASY);
+        ratings1.add(Rating.VERY_EASY);
+
+        ratings1.add(Rating.VERY_EASY);
+        ratings1.add(Rating.MEDIUM);
+        ratings1.add(Rating.VERY_EASY);
+        ratings1.add(Rating.MEDIUM);
+        ratings1.add(Rating.EASY);
+
+        ratings1.add(Rating.VERY_HARD);
+        ratings1.add(Rating.VERY_EASY);
+        ratings1.add(Rating.MEDIUM);
+        ratings1.add(Rating.HARD);
+        ratings1.add(Rating.VERY_EASY);
+
+        ratings1.add(Rating.HARD);
+        ratings1.add(Rating.VERY_HARD);
+        ratings1.add(Rating.VERY_HARD);
 
         ArrayList<Rating> ratings2 = new ArrayList<>();
-        for (int i=0; i < 2; i++) ratings2.add(Rating.VERY_HARD);
+        ratings2.add(Rating.VERY_EASY);
+        ratings2.add(Rating.EASY);
+        ratings2.add(Rating.EASY);
 
         ArrayList<Rating> ratings3 = new ArrayList<>();
-        for (int i=0; i < 11; i++) ratings3.add(Rating.MEDIUM);
+        ratings3.add(Rating.MEDIUM);
+        ratings3.add(Rating.VERY_HARD);
+        ratings3.add(Rating.MEDIUM);
+        ratings3.add(Rating.EASY);
+        ratings3.add(Rating.VERY_EASY);
+
+        ratings3.add(Rating.MEDIUM);
+        ratings3.add(Rating.HARD);
+        ratings3.add(Rating.VERY_HARD);
+        ratings3.add(Rating.VERY_EASY);
 
         ArrayList<Rating> ratings4 = new ArrayList<>();
-        for (int i=0; i < 31; i++) ratings4.add(Rating.EASY);
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+        ratings4.add(Rating.VERY_HARD);
+
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.HARD);
+        ratings4.add(Rating.MEDIUM);
+        ratings4.add(Rating.EASY);
+        ratings4.add(Rating.HARD);
+
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+        ratings4.add(Rating.VERY_EASY);
+
 
         ArrayList<Rating> ratings5 = new ArrayList<>();
-        for (int i=0; i < 5; i++) ratings5.add(Rating.EASY);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.EASY);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.EASY);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.EASY);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.EASY);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.MEDIUM);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
-        for (int i=0; i < 5; i++) ratings5.add(Rating.VERY_HARD);
 
         return Arrays.asList(
                 new Object[][] {
                         { ratings1, 4},
-                        { ratings2, 1},
+                        { ratings2, 3},
                         { ratings3, 3},
-                        { ratings4, 4},
-                        { ratings5, 3}
+                        { ratings4, 2},
+                        { ratings5, 1}
                 }
         );
     }

@@ -4,6 +4,7 @@ import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 
 import java.util.ArrayList;
 
+// TODO improve the code
 public class RatingCalculatorServiceImpl implements RatingCalculatorService {
     private static final int SET_COUNT = 5;
 

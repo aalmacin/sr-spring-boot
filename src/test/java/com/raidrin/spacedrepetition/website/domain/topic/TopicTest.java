@@ -4,9 +4,9 @@ import com.raidrin.spacedrepetition.website.WebsiteApplication;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.RatingCalculatorConfiguration;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.StudyConfiguration;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.TopicConfiguration;
-import com.raidrin.spacedrepetition.website.infrastructure.database.StudyImpl;
+import com.raidrin.spacedrepetition.website.domain.study.Study;
+import com.raidrin.spacedrepetition.website.infrastructure.database.ParentTopicNotFoundException;
 import com.raidrin.spacedrepetition.website.infrastructure.database.StudyRepository;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicImpl;
 import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
 import com.raidrin.spacedrepetition.website.domain.study.*;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {StudyConfiguration.class, TopicConfiguration.class, RatingCalculatorConfiguration.class, WebsiteApplication.class})
 @DataJpaTest
-public class TopicImplTest {
+public class TopicTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -50,12 +50,12 @@ public class TopicImplTest {
     @Test
     public void createTopic() throws DuplicateTopicCreationException {
         topic.createTopic("Math");
-        List<TopicImpl> topics = topicRepository.findAll();
+        List<Topic> topics = topicRepository.findAll();
         assertThat(topics.size(), is(greaterThan(0)));
     }
 
     @Test
-    public void findTopic() throws DuplicateTopicCreationException {
+    public void findTopic() throws DuplicateTopicCreationException, TopicNotFoundException {
         topic.createTopic("Math");
         Topic math = topic.findTopic("Math");
         assertThat(math, notNullValue());
@@ -68,7 +68,7 @@ public class TopicImplTest {
     }
 
     @Test
-    public void createSubTopicWithValidParent() throws Exception, DuplicateTopicCreationException {
+    public void createSubTopicWithValidParent() throws Exception, DuplicateTopicCreationException, TopicNotFoundException {
         topic.createTopic("Math");
         Topic math = topic.findTopic("Math");
         topic.createSubTopic("Calculus", math);
@@ -77,7 +77,7 @@ public class TopicImplTest {
     }
 
     @Test
-    public void getSubTopics() throws DuplicateTopicCreationException {
+    public void getSubTopics() throws DuplicateTopicCreationException, ParentTopicNotFoundException {
         String mathTopicName = "Math";
         String englishTopicName = "English";
 
@@ -85,14 +85,14 @@ public class TopicImplTest {
         topic.createTopic(mathTopicName);
         topic.createTopic(englishTopicName);
 
-        Topic math = topicRepository.findByName(mathTopicName);
-        Topic english = topicRepository.findByName(englishTopicName);
+        Topic math = topicRepository.findByName(mathTopicName).get();
+        Topic english = topicRepository.findByName(englishTopicName).get();
 
         // Empty subtopics
-        ArrayList<Topic> mathSubTopics = topic.getSubTopics(math);
+        List<Topic> mathSubTopics = topic.getSubTopics(math);
         assertThat(mathSubTopics.size(), is(equalTo(0)));
 
-        ArrayList<Topic> englishSubTopics = topic.getSubTopics(english);
+        List<Topic> englishSubTopics = topic.getSubTopics(english);
         assertThat(englishSubTopics.size(), is(equalTo(0)));
 
         // Create Subtopic
@@ -117,11 +117,11 @@ public class TopicImplTest {
         assertThat(englishSubTopics.size(), is(equalTo(1)));
 
         // Math Child Subtopic
-        Topic algebra = topicRepository.findByName("Algebra");
+        Topic algebra = topicRepository.findByName("Algebra").get();
         topic.createSubTopic("Linear Algebra", algebra);
 
         mathSubTopics = topic.getSubTopics(math);
-        ArrayList<Topic> algebraSubTopics = topic.getSubTopics(algebra);
+        List<Topic> algebraSubTopics = topic.getSubTopics(algebra);
 
         assertThat(algebraSubTopics.size(), is(equalTo(1)));
         assertThat(mathSubTopics.size(), is(equalTo(2)));
@@ -139,14 +139,14 @@ public class TopicImplTest {
     }
 
     @Test
-    public void getNextStudyTime() throws InvalidRatingException, DuplicateTopicCreationException {
+    public void getNextStudyTime() throws InvalidRatingException, DuplicateTopicCreationException, TopicNotFoundException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
-        Topic math = topicRepository.findByName(mathTopicName);
+        Topic math = topicRepository.findByName(mathTopicName).get();
 
         // 1
 
-        ArrayList<Rating> ratings = new ArrayList<>();
+        List<Rating> ratings = new ArrayList<>();
         ratings.add(Rating.HARD);
         ratings.add(Rating.HARD);
         ratings.add(Rating.MEDIUM);
@@ -155,11 +155,11 @@ public class TopicImplTest {
             study.startStudy(math);
         }
 
-        List<StudyImpl> studyRecordList = studyRepository.findAll();
+        List<Study> studyRecordList = studyRepository.findAll();
         long endTime = DateTime.now().getMillis();
 
         for (int i=0; i < studyRecordList.size(); i++) {
-            StudyImpl studyRecord = studyRecordList.get(i);
+            Study studyRecord = studyRecordList.get(i);
             study.finishStudy(studyRecord, ratings.get(i), "No comment");
             endTime = studyRecord.getEndTime();
         }
@@ -167,7 +167,7 @@ public class TopicImplTest {
         long nextStudyTime = topic.getNextStudyTime(math);
         assertThat(nextStudyTime, notNullValue());
 
-        ArrayList<Study> mathStudies = topic.getStudies(math);
+        List<Study> mathStudies = topic.getStudies(math);
 
         for (Study mathStudy : mathStudies) {
             assertThat(mathStudy.getStartTime(), notNullValue());
@@ -206,12 +206,14 @@ public class TopicImplTest {
     }
 
     @Test
-    public void getStudies() throws DuplicateTopicCreationException {
+    public void getStudies() throws DuplicateTopicCreationException, TopicNotFoundException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
-        Topic math = topicRepository.findByName(mathTopicName);
+        final Optional<Topic> queryTopicByName = topicRepository.findByName(mathTopicName);
+        assertThat(queryTopicByName.isPresent(), is(true));
+        Topic math = queryTopicByName.get();
 
-        ArrayList<Study> studies = topic.getStudies(math);
+        List<Study> studies = topic.getStudies(math);
         assertThat(studies.size(), is(equalTo(0)));
 
         study.startStudy(math);

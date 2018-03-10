@@ -11,6 +11,7 @@ import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.Ratin
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class TopicServiceImpl implements TopicService {
@@ -26,35 +27,37 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void createTopic(String name) throws DuplicateTopicCreationException {
-        if(topicRepository.findByName(name) == null) topicRepository.save(new TopicImpl(name));
+        if(!topicRepository.findByName(name).isPresent()) topicRepository.save(new Topic(name));
         else throw new DuplicateTopicCreationException();
     }
 
     @Override
     public void createSubTopic(String subTopic, Topic topic) throws DuplicateTopicCreationException {
-        if(topicRepository.findByName(subTopic) != null) {
+        if(topicRepository.findByName(subTopic).isPresent()) {
             throw new DuplicateTopicCreationException();
         } else {
-            Topic childTopic = new TopicImpl(subTopic);
-            ((TopicImpl) childTopic).setParentTopic((TopicImpl) topic);
-            topicRepository.save((TopicImpl) childTopic);
+            Topic childTopic = new Topic(subTopic);
+            childTopic.setParentTopic(topic);
+            topicRepository.save(childTopic);
         }
     }
 
     @Override
-    public Topic findTopic(String name) {
-        return topicRepository.findByName(name);
+    public Topic findTopic(String name) throws TopicNotFoundException {
+        Optional<Topic> topicQuery = topicRepository.findByName(name);
+        if(!topicQuery.isPresent()) throw new TopicNotFoundException();
+        return topicQuery.get();
     }
 
     @Override
-    public ArrayList<Topic> getSubTopics(Topic topic) {
+    public List<Topic> getSubTopics(Topic topic) throws ParentTopicNotFoundException {
         return topicRepository.findByParentTopic(topic);
     }
 
     @Override
-    public long getNextStudyTime(Topic topic) throws InvalidRatingException {
-        ArrayList<Study> studies = studyRepository.findByTopic(topic);
-        ArrayList<Rating> ratings = new ArrayList<>();
+    public long getNextStudyTime(Topic topic) throws InvalidRatingException, TopicNotFoundException {
+        Iterable<Study> studies = studyRepository.findByTopic(topic);
+        List<Rating> ratings = new ArrayList<>();
 
         for (Study study : studies) ratings.add(study.getRating());
 
@@ -85,25 +88,25 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public ArrayList<Study> getStudies(Topic topic) {
+    public List<Study> getStudies(Topic topic) throws TopicNotFoundException {
         return studyRepository.findByTopic(topic);
     }
 
     @Override
-    public ArrayList<Topic> getAll() {
-        ArrayList<Topic> topics = new ArrayList<>();
-        topics.addAll(topicRepository.findAll());
-        return topics;
+    public List<Topic> getAll() {
+        return topicRepository.findAll();
     }
 
     @Override
-    public Topic getByName(String name) {
-        return topicRepository.findByName(name);
+    public Topic getByName(String name) throws TopicNotFoundException {
+        final Optional<Topic> topicQuery = topicRepository.findByName(name);
+        if(!topicQuery.isPresent()) throw new TopicNotFoundException();
+        return topicQuery.get();
     }
 
     @Override
     public Topic getById(long id) throws TopicNotFoundException {
-        Optional<TopicImpl> result = topicRepository.findById(id);
+        Optional<Topic> result = topicRepository.findById(id);
         if(result.isPresent()) return result.get();
         else throw new TopicNotFoundException();
     }

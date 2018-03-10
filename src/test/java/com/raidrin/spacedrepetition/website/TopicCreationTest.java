@@ -34,7 +34,7 @@ public class TopicCreationTest {
     }
 
     @Test
-    public void createTopic() throws DuplicateTopicCreationException {
+    public void createTopic() throws DuplicateTopicCreationException, TopicNotFoundException {
         topic.createTopic("Geography");
 
         Topic topicRecord = topic.findTopic("Geography");

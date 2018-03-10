@@ -1,9 +1,9 @@
 package com.raidrin.spacedrepetition.website.infrastructure.bootstrap;
 
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
-import com.raidrin.spacedrepetition.website.infrastructure.database.StudyImpl;
+import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.infrastructure.database.StudyRepository;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicImpl;
+import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
@@ -21,13 +21,13 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
 
 
     private void initData() {
-        TopicImpl math = new TopicImpl("Math");
-        TopicImpl algebra = new TopicImpl("Algebra");
+        Topic math = new Topic("Math");
+        Topic algebra = new Topic("Algebra");
         algebra.setParentTopic(math);
 
-        TopicImpl physics = new TopicImpl("Physics");
-        TopicImpl english = new TopicImpl("English");
-        TopicImpl music = new TopicImpl("Music");
+        Topic physics = new Topic("Physics");
+        Topic english = new Topic("English");
+        Topic music = new Topic("Music");
 
         topicRepository.save(algebra);
         topicRepository.save(math);
@@ -35,7 +35,7 @@ public class BootstrapDev implements ApplicationListener<ContextRefreshedEvent> 
         topicRepository.save(english);
         topicRepository.save(music);
 
-        StudyImpl session1 = new StudyImpl();
+        Study session1 = new Study();
         session1.setRating(Rating.EASY);
         DateTime dateTime = new DateTime();
         session1.setStartTime(dateTime.getMillis());

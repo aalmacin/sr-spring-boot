@@ -3,10 +3,11 @@ package com.raidrin.spacedrepetition.website.infrastructure.database;
 import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.domain.study.StudyService;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
-import com.raidrin.spacedrepetition.website.domain.topic.*;
+import com.raidrin.spacedrepetition.website.domain.topic.Topic;
+import com.raidrin.spacedrepetition.website.domain.topic.TopicNotFoundException;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class StudyServiceImpl implements StudyService {
     private final StudyRepository studyRepository;
@@ -17,23 +18,22 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public Study startStudy(Topic topic) {
-        Study studyRecord = new StudyImpl((TopicImpl) topic);
-
-        ((StudyImpl) studyRecord).setStartTime(generateCurrentTimestamp());
-        studyRepository.save((StudyImpl) studyRecord);
+        Study studyRecord = new Study(topic);
+        studyRecord.setStartTime(generateCurrentTimestamp());
+        studyRepository.save(studyRecord);
         return studyRecord;
     }
 
     @Override
     public void finishStudy(Study studyRecord, Rating rating, String comment) {
-        ((StudyImpl) studyRecord).setComment(comment);
-        ((StudyImpl) studyRecord).setEndTime(generateCurrentTimestamp());
-        ((StudyImpl) studyRecord).setRating(rating);
-        studyRepository.save((StudyImpl) studyRecord);
+        studyRecord.setComment(comment);
+        studyRecord.setEndTime(generateCurrentTimestamp());
+        studyRecord.setRating(rating);
+        studyRepository.save(studyRecord);
     }
 
     @Override
-    public ArrayList<Study> getByTopic(Topic topic) {
+    public List<Study> getByTopic(Topic topic) throws TopicNotFoundException {
         return studyRepository.findByTopic(topic);
     }
 

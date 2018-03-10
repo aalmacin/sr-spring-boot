@@ -4,6 +4,7 @@ import com.raidrin.spacedrepetition.website.domain.study.*;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 import com.raidrin.spacedrepetition.website.domain.topic.*;
+import com.raidrin.spacedrepetition.website.infrastructure.database.ParentTopicNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -33,7 +34,7 @@ public class TopicsController {
     }
 
     @PostMapping("/topics/create")
-    public ModelAndView createTopic(@RequestParam String name, @RequestParam String parent, ModelMap model) {
+    public ModelAndView createTopic(@RequestParam String name, @RequestParam String parent, ModelMap model) throws TopicNotFoundException {
         try {
             if(parent.equals("")) {
                 topic.createTopic(name);
@@ -51,12 +52,12 @@ public class TopicsController {
     }
 
     @RequestMapping("/topics")
-    public String topics(Model model) throws InvalidRatingException {
+    public String topics(Model model) throws InvalidRatingException, ParentTopicNotFoundException, TopicNotFoundException {
         List<Topic> topicRecords = topic.getAll();
 
         ArrayList<TopicsViewModel> returnTopics = new ArrayList<>();
         for (Topic topicRecord: topicRecords) {
-            ArrayList<Topic> childrenRecords = topic.getSubTopics(topicRecord);
+            List<Topic> childrenRecords = topic.getSubTopics(topicRecord);
             TopicsViewModel returnTopic = new TopicsViewModel(
                     topicRecord.getId(),
                     (topicRecord.getParentTopic() != null) ? topicRecord.getParentTopic().getName() : "---",
@@ -75,7 +76,7 @@ public class TopicsController {
         Topic topicRecord = topic.getById(id);
         Study studyRecord = null;
 
-        ArrayList<Study> studyRecords = study.getByTopic(topicRecord);
+        List<Study> studyRecords = study.getByTopic(topicRecord);
         for (Study tempStudyRecord : studyRecords) {
             if(tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
         }
@@ -90,7 +91,7 @@ public class TopicsController {
     public String studyTopic(@RequestParam long id,
                              @RequestParam int rating,
                              @RequestParam String comment,
-                             Model model) throws InvalidRatingException, StudyRecordNotFoundException {
+                             Model model) throws InvalidRatingException, StudyRecordNotFoundException, TopicNotFoundException {
         Topic topicRecord = null;
         try {
             topicRecord = topic.getById(id);
@@ -99,7 +100,7 @@ public class TopicsController {
         }
         Study studyRecord = null;
 
-        ArrayList<Study> studyRecords = study.getByTopic(topicRecord);
+        List<Study> studyRecords = study.getByTopic(topicRecord);
         for (Study tempStudyRecord : studyRecords) {
             if (tempStudyRecord.getEndTime() == 0) studyRecord = tempStudyRecord;
         }

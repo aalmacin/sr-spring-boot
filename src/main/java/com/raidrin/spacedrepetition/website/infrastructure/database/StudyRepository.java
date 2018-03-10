@@ -4,8 +4,8 @@ import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public interface StudyRepository extends JpaRepository<StudyImpl, Long> {
-    ArrayList<Study> findByTopic(Topic topic);
+public interface StudyRepository extends JpaRepository<Study, Long> {
+    List<Study> findByTopic(Topic topic);
 }

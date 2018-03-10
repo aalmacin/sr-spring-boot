@@ -1,9 +1,21 @@
 package com.raidrin.spacedrepetition.website.domain.topic;
 
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicImpl;
+import lombok.*;
 
-public interface Topic {
-    Long getId();
-    String getName();
-    TopicImpl getParentTopic();
+import javax.persistence.*;
+
+@Entity
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class Topic {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @NonNull
+    private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Topic parentTopic;
 }

@@ -3,10 +3,11 @@ package com.raidrin.spacedrepetition.website.infrastructure.database;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-public interface TopicRepository extends JpaRepository<TopicImpl, Long> {
-    Topic findByName(String name);
+public interface TopicRepository extends JpaRepository<Topic, Long> {
+    Optional<Topic> findByName(String name);
 
-    ArrayList<Topic> findByParentTopic(Topic topic);
+    List<Topic> findByParentTopic(Topic topic);
 }

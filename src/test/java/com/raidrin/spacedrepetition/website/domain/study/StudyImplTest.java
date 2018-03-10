@@ -4,7 +4,6 @@ import com.raidrin.spacedrepetition.website.WebsiteApplication;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.RatingCalculatorConfiguration;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.StudyConfiguration;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.TopicConfiguration;
-import com.raidrin.spacedrepetition.website.infrastructure.database.StudyImpl;
 import com.raidrin.spacedrepetition.website.infrastructure.database.StudyRepository;
 import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
@@ -18,8 +17,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -46,14 +45,17 @@ public class StudyImplTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void startStudy() throws Exception, DuplicateTopicCreationException {
+    public void startStudy() throws Exception, DuplicateTopicCreationException, TopicNotFoundException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
-        Topic math = topicRepository.findByName(mathTopicName);
+
+        final Optional<Topic> topicByNameQuery = topicRepository.findByName(mathTopicName);
+        assertThat(topicByNameQuery.isPresent(), is(true));
+        Topic math = topicRepository.findByName(mathTopicName).get();
 
         study.startStudy(math);
         Topic topicRecord = topic.findTopic(mathTopicName);
-        ArrayList<Study> studyRecord = studyRepository.findByTopic(topicRecord);
+        List<Study> studyRecord = studyRepository.findByTopic(topicRecord);
 
         assertThat(studyRecord.size(), is(equalTo(1)));
 
@@ -72,10 +74,12 @@ public class StudyImplTest {
     public void finishStudy() throws Exception, DuplicateTopicCreationException {
         String mathTopicName = "Math";
         topic.createTopic(mathTopicName);
-        Topic math = topicRepository.findByName(mathTopicName);
+        final Optional<Topic> topicByNameQuery = topicRepository.findByName(mathTopicName);
+        assertThat(topicByNameQuery.isPresent(), is(true));
+        Topic math = topicByNameQuery.get();
 
         study.startStudy(math);
-        List<StudyImpl> allStudies = studyRepository.findAll();
+        List<Study> allStudies = studyRepository.findAll();
         assertThat(allStudies.size(), is(equalTo(1)));
 
         if(studyRepository.findById(allStudies.get(0).getId()).isPresent()) {

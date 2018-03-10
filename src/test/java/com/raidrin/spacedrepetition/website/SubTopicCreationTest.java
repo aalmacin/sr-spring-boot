@@ -1,11 +1,12 @@
 package com.raidrin.spacedrepetition.website;
 
+import com.raidrin.spacedrepetition.website.domain.topic.Topic;
+import com.raidrin.spacedrepetition.website.domain.topic.TopicNotFoundException;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.RatingCalculatorConfiguration;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.StudyConfiguration;
 import com.raidrin.spacedrepetition.website.domain.topic.DuplicateTopicCreationException;
 import com.raidrin.spacedrepetition.website.domain.topic.TopicService;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.TopicConfiguration;
-import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,7 +32,7 @@ public class SubTopicCreationTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void noDuplicates() throws DuplicateTopicCreationException {
+    public void noDuplicates() throws DuplicateTopicCreationException, TopicNotFoundException {
         expectedException.expect(DuplicateTopicCreationException.class);
         topic.createTopic("Geography");
         topic.createTopic("History");
@@ -47,7 +48,7 @@ public class SubTopicCreationTest {
     }
 
     @Test
-    public void noDuplicatesOtherTopicAsParent() throws DuplicateTopicCreationException {
+    public void noDuplicatesOtherTopicAsParent() throws DuplicateTopicCreationException, TopicNotFoundException {
         expectedException.expect(DuplicateTopicCreationException.class);
         topic.createTopic("Geography");
         topic.createTopic("History");
@@ -64,7 +65,7 @@ public class SubTopicCreationTest {
     }
 
     @Test
-    public void created() throws DuplicateTopicCreationException {
+    public void created() throws DuplicateTopicCreationException, TopicNotFoundException {
         topic.createTopic("Geography");
 
         Topic geography = topic.findTopic("Geography");
@@ -76,7 +77,7 @@ public class SubTopicCreationTest {
     }
 
     @Test
-    public void createdWithCorrectParent() throws DuplicateTopicCreationException {
+    public void createdWithCorrectParent() throws DuplicateTopicCreationException, TopicNotFoundException {
         topic.createTopic("Geography");
 
         Topic geography = topic.findTopic("Geography");

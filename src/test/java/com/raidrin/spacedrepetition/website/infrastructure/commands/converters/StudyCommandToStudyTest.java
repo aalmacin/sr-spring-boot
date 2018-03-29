@@ -4,13 +4,12 @@ import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import com.raidrin.spacedrepetition.website.infrastructure.commands.StudyCommand;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.TopicRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 

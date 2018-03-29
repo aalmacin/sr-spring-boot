@@ -1,10 +1,11 @@
-package com.raidrin.spacedrepetition.website.infrastructure.database;
+package com.raidrin.spacedrepetition.website.infrastructure.services;
 
 import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.domain.study.StudyService;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import com.raidrin.spacedrepetition.website.domain.topic.TopicNotFoundException;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.StudyRepository;
 import org.joda.time.DateTime;
 
 import java.util.List;

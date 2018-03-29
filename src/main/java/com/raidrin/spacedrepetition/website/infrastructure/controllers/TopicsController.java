@@ -4,7 +4,7 @@ import com.raidrin.spacedrepetition.website.domain.study.*;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 import com.raidrin.spacedrepetition.website.domain.topic.*;
-import com.raidrin.spacedrepetition.website.infrastructure.database.ParentTopicNotFoundException;
+import com.raidrin.spacedrepetition.website.domain.topic.ParentTopicNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;

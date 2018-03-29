@@ -2,9 +2,9 @@ package com.raidrin.spacedrepetition.website.infrastructure.bootstrap;
 
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 import com.raidrin.spacedrepetition.website.domain.study.Study;
-import com.raidrin.spacedrepetition.website.infrastructure.database.StudyRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.StudyRepository;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.TopicRepository;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

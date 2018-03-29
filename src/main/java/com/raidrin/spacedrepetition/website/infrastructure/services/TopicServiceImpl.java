@@ -1,13 +1,12 @@
-package com.raidrin.spacedrepetition.website.infrastructure.database;
+package com.raidrin.spacedrepetition.website.infrastructure.services;
 
 import com.raidrin.spacedrepetition.website.domain.study.Study;
-import com.raidrin.spacedrepetition.website.domain.topic.DuplicateTopicCreationException;
-import com.raidrin.spacedrepetition.website.domain.topic.Topic;
-import com.raidrin.spacedrepetition.website.domain.topic.TopicNotFoundException;
-import com.raidrin.spacedrepetition.website.domain.topic.TopicService;
+import com.raidrin.spacedrepetition.website.domain.topic.*;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
 import com.raidrin.spacedrepetition.website.domain.study.rating.calculator.RatingCalculatorService;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.StudyRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.TopicRepository;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;

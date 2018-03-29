@@ -1,4 +1,4 @@
-package com.raidrin.spacedrepetition.website.infrastructure.database;
+package com.raidrin.spacedrepetition.website.infrastructure.repositories;
 
 import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;

@@ -2,7 +2,7 @@ package com.raidrin.spacedrepetition.website.infrastructure.commands.converters;
 
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import com.raidrin.spacedrepetition.website.infrastructure.commands.TopicCommand;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.TopicRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

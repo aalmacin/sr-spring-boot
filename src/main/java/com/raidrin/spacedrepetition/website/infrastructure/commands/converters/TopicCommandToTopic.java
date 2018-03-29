@@ -3,7 +3,7 @@ package com.raidrin.spacedrepetition.website.infrastructure.commands.converters;
 import com.raidrin.spacedrepetition.website.domain.topic.Topic;
 import com.raidrin.spacedrepetition.website.domain.topic.TopicNotFoundException;
 import com.raidrin.spacedrepetition.website.infrastructure.commands.TopicCommand;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.TopicRepository;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;

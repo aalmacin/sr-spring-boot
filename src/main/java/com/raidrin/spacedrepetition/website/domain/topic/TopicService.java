@@ -2,7 +2,6 @@ package com.raidrin.spacedrepetition.website.domain.topic;
 
 import com.raidrin.spacedrepetition.website.domain.study.Study;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
-import com.raidrin.spacedrepetition.website.infrastructure.database.ParentTopicNotFoundException;
 
 import java.util.List;
 

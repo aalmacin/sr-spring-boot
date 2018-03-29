@@ -5,9 +5,8 @@ import com.raidrin.spacedrepetition.website.infrastructure.configs.RatingCalcula
 import com.raidrin.spacedrepetition.website.infrastructure.configs.StudyConfiguration;
 import com.raidrin.spacedrepetition.website.infrastructure.configs.TopicConfiguration;
 import com.raidrin.spacedrepetition.website.domain.study.Study;
-import com.raidrin.spacedrepetition.website.infrastructure.database.ParentTopicNotFoundException;
-import com.raidrin.spacedrepetition.website.infrastructure.database.StudyRepository;
-import com.raidrin.spacedrepetition.website.infrastructure.database.TopicRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.StudyRepository;
+import com.raidrin.spacedrepetition.website.infrastructure.repositories.TopicRepository;
 import com.raidrin.spacedrepetition.website.domain.study.*;
 import com.raidrin.spacedrepetition.website.domain.study.rating.InvalidRatingException;
 import com.raidrin.spacedrepetition.website.domain.study.rating.Rating;
